@@ -1,0 +1,10 @@
+{
+  "name": "netpune",
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "dependencies": {
+    "bootstrap": "latest",
+    "jquery":"latest"
+  }
+}

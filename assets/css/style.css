@@ -1,0 +1,20 @@
+body {
+    background: #fff;
+}
+
+nav {
+    background-color: rgba(255, 255, 255, .15);
+}
+
+#home-background {
+    background-image: url('../images/piscine-restaurant.jpg');
+    height: 500px;
+}
+
+.parallax {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    margin-left: -50vw;
+    height: calc(100vh - 36px);
+ }

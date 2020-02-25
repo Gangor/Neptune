@@ -6,13 +6,17 @@ class Router
     {
         $request->controller    = Router::get( $url, 1, 'home' );
         $request->action        = Router::get( $url, 2, 'index' );
-        $request->params        = Router::param( $url, 3, array());
+        $request->params        = Router::param( $url, 3);
     }
 
     static public function get( string $url, int $index, $default )
     {
         $url = trim($url);
-        $explode_url = explode('/', $url);
+
+        if (strpos($url, '?' ))
+            $explode_url = explode( '/', substr( $url, 0, strpos($url, '?' )));
+        else
+            $explode_url = explode( '/', $url);
 
         if ( isset( $explode_url[ $index ] ) 
             && !empty( $explode_url[ $index ] ) )
@@ -21,21 +25,37 @@ class Router
         return $default;
     }
 
-    static public function param( string $url, int $index, $default)
+    static public function param( string $url, int $index)
     {
-        $url = trim($url);
-        $explode_url = explode('/', $url );
+        $url = trim( $url );
+        $params = array();
 
-        if ( isset( $explode_url[ $index ] ) 
-            && !empty( $explode_url[ $index ] ) )
-            return array_slice( $explode_url, $index );
+        if ( strpos( $url, '?' ) )
+        {
+            $pos = strpos( $url, '?' ) + 1;
+            $len = strlen( $url );
+            $params = explode( '&', substr( $url, $pos, $len ));
 
-        return $default;
+            for ( $i = 0; $i < sizeof( $params ); $i++ )
+            {
+                $explodes = explode( '=', $params[$i] );
+                $params[$i] = $explodes[1];
+            }
+        }
+        else
+        {
+            $params = explode( '/', $url );
+        }
+
+        if ( sizeof( $params ) > 0 ) 
+            return array_slice( $params, 0 );
+
+        return array();
     }
 
     static public function redirect( string $url )
     {
-        header( 'Location: '. $url );
+        header( 'Location: /'. $url );
         exit( 0 );
     }
 

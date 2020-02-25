@@ -17,21 +17,20 @@ class Session
 
     static function get( string $name )
     {        
-        if ( isset( $result ) &&
-            !empty( $result ) )
+        if ( isset( $_SESSION[ $name ] ) && !empty( $_SESSION[ $name ] ) )
             return $_SESSION[ $name];
         
-        return null;
+        return false;
     }
 
     static function Loggin()
     {
-        return Session::get('userId') !== null;
+        return Session::get( 'userId' ) != false;
     }
 
     static function set( string $name, $value )
     {
-        $_SESSION[ $name] = $value;
+        $_SESSION[ $name ] = $value;
     }
 }
 

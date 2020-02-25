@@ -24,7 +24,7 @@ class Dispatcher
             if (!method_exists( $controller, $this->request->action ))
             {
                 http_response_code(404);
-                echo 'Action not found !!!';
+                echo 'Action '.$this->request->action.' not found !!!';
             }
             else
             {

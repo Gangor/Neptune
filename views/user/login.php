@@ -8,16 +8,14 @@
             <div class="mb-5"></div>
             <h2 class="text-center"><?php echo $title ?></h2>
             <div class="mb-5"></div>
-            <?php Form::Begin( "login" ) ?>
 
+            <?php Form::Begin( "login", "loginConfirm" ) ?>
                 <div class="form-group">
-                    <?php Form::Input( "text", array( "placeholder" => "Email", "class" => "form-control"), "email", "" ) ?>
+                    <?php Form::Input( "text", array( "placeholder" => "Email"), "email" ) ?>
                 </div>
-
                 <div class="form-group">
-                    <?php Form::Input( "password", array( "placeholder" => "Mot de passe", "class" => "form-control"), "password", "" ) ?>
+                    <?php Form::Input( "password", array( "placeholder" => "Mot de passe"), "password" ) ?>
                 </div>
-
                 <div class="form-group text-center">
                     <button type="submit" class="btn btn-success">Confirmer</button>
                 </div>

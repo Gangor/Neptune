@@ -30,6 +30,7 @@
             <img src="/favicon.png" width="30px" height="30px" /> Neptune
         </a>
         
+        <?php if ( !Session::Loggin() ) { ?>
         <ul class="navbar-nav  navbar-right">
             <li class="nav-item">
                 <a class="nav-link" href="/User/Login">Se connecter</a>
@@ -38,6 +39,16 @@
                 <a class="nav-link" href="/User/Register">Inscription</a>
             </li>
         </ul>
+        <?php } else { ?>
+        <ul class="navbar-nav  navbar-right">
+            <li class="nav-item">
+                <a class="nav-link" href="#"><?php echo $user->prenom.' '.$user->nom ?></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Déconnexion</a>
+            </li>
+        </ul>
+        <?php } ?>
     </nav>
 
     <?php echo $this->section[ "body" ]; ?>

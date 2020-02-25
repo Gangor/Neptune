@@ -15,7 +15,7 @@ class Controller
         if ( Session::Loggin() ) 
         {
             $userId = Session::get( 'userId' );
-            $user = $this->user->GetUser( $userId );
+            $user = $this->user->GetUserById( $userId );
             
             $this->view[ 'user' ] = $user;
         }
@@ -45,6 +45,25 @@ class Controller
             
             require( $file );
         }
+    }
+
+    function getPost( string $name )
+    {
+        if ( isset( $_POST[ $name ] ) )
+            if ( !empty( $_POST[ $name ] ) )
+                return $_POST[ $name ];
+
+        return NULL;
+    }
+
+    function validPosts( array $names )
+    {
+        foreach ( $names as $name )
+        {
+            if ( !isset( $_POST[ $name ] ) || empty( $_POST[ $name ] ) )
+                return false;
+        }
+        return true;
     }
 
     /**

@@ -10,8 +10,9 @@
             <div class="mb-5"></div>
             <h2 class="text-center"><?php echo $title ?></h2>
             <div class="mb-5"></div>
+            <?php Form::Begin( "register", "/user/registerConfirm" ) ?>
+                <div class="text-danger"><?php echo $error; ?></div>
 
-            <?php Form::Begin( "register", "registerConfirm" ) ?>
                 <h5 class="text-center">Information de connexion</h5>
                 <div class="form-group">
                     <?php Form::Input( "text", array( "placeholder" => "Email"), "email" ) ?>
@@ -21,7 +22,8 @@
                 </div>
                 <div class="mb-3"></div>
 
-                <h5 class="text-center">Information personnelle</h5>                
+                <h5 class="text-center">Information personnelle</h5>
+
                 <div class="form-group">
                     <select id="civilite" name="civilite" class="form-control">
                         <option value="Monsieur">Monsieur</option>
@@ -29,6 +31,7 @@
                         <option value="Madame">Madame</option>
                     </select>
                 </div>
+
                 <div class="form-group">
                     <?php Form::Select( array(), "pays", $pays, array( "id", "nom" ) ) ?>
                 </div>

@@ -71,7 +71,7 @@ class Router
 
     static public function redirectLocal( string $controller, string $action )
     {
-        header( 'Location: ./'. $controller .'/'. $action );
+        header( 'Location: /'. $controller .'/'. $action );
         exit( 0 );
     }
 

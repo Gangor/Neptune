@@ -9,7 +9,8 @@
             <h2 class="text-center"><?php echo $title ?></h2>
             <div class="mb-5"></div>
 
-            <?php Form::Begin( "login", "loginConfirm" ) ?>
+            <div class="text-danger"><?php echo $error; ?></div>
+            <?php Form::Begin( "login", "/user/loginConfirm" ) ?>
                 <div class="form-group">
                     <?php Form::Input( "text", array( "placeholder" => "Email"), "email" ) ?>
                 </div>
@@ -18,6 +19,9 @@
                 </div>
                 <div class="form-group text-center">
                     <button type="submit" class="btn btn-success">Confirmer</button>
+                </div>
+                <div class="form-group text-center">
+                    <a class="btn btn-default" href="/user/register">Inscription</a>
                 </div>
             <?php Form::End( ) ?>
         </div>

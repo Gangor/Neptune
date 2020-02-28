@@ -15,7 +15,11 @@ class homeController extends Controller
 
     public function test()
     {
-        $this->invalid();
+        if (!Session::Loggin())
+            $this->unauthorized();
+
+        $this->view["title"] = "Page utilisateur";
+        $this->render("test");
     }
 }
 

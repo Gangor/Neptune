@@ -19,6 +19,8 @@ class Controller
             
             $this->view[ 'user' ] = $user;
         }
+        
+        $this->view[ 'error' ] = "";
     }
 
     function render( string $action_name, string $layout = "default")

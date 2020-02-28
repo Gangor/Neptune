@@ -42,10 +42,10 @@
         <?php } else { ?>
         <ul class="navbar-nav  navbar-right">
             <li class="nav-item">
-                <a class="nav-link" href="#"><?php echo $user->prenom.' '.$user->nom ?></a>
+                <a class="nav-link" href="/home/test"><?php echo $user->prenom.' '.$user->nom ?></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Déconnexion</a>
+                <a class="nav-link" href="/user/logout">Déconnexion</a>
             </li>
         </ul>
         <?php } ?>

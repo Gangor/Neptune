@@ -11,48 +11,21 @@
 
     <link href="/assets/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/assets/css/style.css" rel="stylesheet" />
+
+    <?php $this->renderSection( "header" ); ?>
 </head>
 <body>
-    <!-- Image and text -->
-    <nav class="navbar navbar-expand-lg navbar-light">        
-        <div class="collapse navbar-collapse navbar-left">
-            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="/">Accueil</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/Test/Index/1/Bonjour">Chambres</a>
-                </li>
-            </ul>
-        </div>
 
-        <a class="navbar-brand  navbar-collapse" href="/">
-            <img src="/favicon.png" width="30px" height="30px" /> Neptune
-        </a>
-        
-        <?php if ( !Session::Loggin() ) { ?>
-        <ul class="navbar-nav  navbar-right">
-            <li class="nav-item">
-                <a class="nav-link" href="/User/Login">Se connecter</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/User/Register">Inscription</a>
-            </li>
-        </ul>
-        <?php } else { ?>
-        <ul class="navbar-nav  navbar-right">
-            <li class="nav-item">
-                <a class="nav-link" href="/home/test"><?php echo $user->prenom.' '.$user->nom ?></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/user/logout">Déconnexion</a>
-            </li>
-        </ul>
-        <?php } ?>
-    </nav>
+    <!-- MENU : START !-->
+    <?php $this->renderPartial( VIEWS. "/shared/menu.php" ); ?>
+    <!-- MENU : END !-->
 
-    <?php echo $this->section[ "body" ]; ?>
+    <!-- VIEW : START !-->
+    <?php $this->renderSection( "body" ); ?>
+    <!-- VIEW : END !-->
     
     <script src="/assets/bower_components/jquery/dist/jquery.min.js"></script>
+    
+    <?php $this->renderSection( "scripts" ); ?>
 </body>
 </html>

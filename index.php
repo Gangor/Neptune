@@ -4,11 +4,11 @@
     define('ROOT', str_replace( 'index.php', "", $_SERVER[ "SCRIPT_FILENAME" ] ) );
 
     require( ROOT. "config.php" );
-    require( ROOT. "core/dispatcher.php" );
-    require( ROOT. "core/form.php" );
-    require( ROOT. "core/router.php" );
-    require( ROOT. "core/request.php" );
-    require( ROOT. "core/session.php" );
+    require( CORE. "/dispatcher.php" );
+    require( CORE. "/form.php" );
+    require( CORE. "/router.php" );
+    require( CORE. "/request.php" );
+    require( CORE. "/session.php" );
 
     $session = new Session();
     $dispatcher = new Dispatcher();

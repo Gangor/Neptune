@@ -4,9 +4,19 @@ class Router
 {
     static public function parse(string $url, $request)
     {
-        $request->controller    = Router::get( $url, 1, 'home' );
-        $request->action        = Router::get( $url, 2, 'index' );
-        $request->params        = Router::param( $url, 3);
+        $request->controller    = Router::get( $url, 1, CONTROLLER_DEF );
+        $request->action        = Router::get( $url, 2, ACTION_DEF );
+        $request->params        = Router::param( $url );
+
+        for ( $i = 0; $i < sizeof( $request->params ); $i++ )
+        {
+            if ( is_bool( $request->params[ $i ] ) )
+                $request->params[ $i ] = boolval( $request->params[ $i ] );
+            elseif ( is_numeric( $request->params[ $i ] ) )
+                $request->params[ $i ] = intval( $request->params[ $i ] );
+            elseif ( is_float( $request->params[ $i ] ) )
+                $request->params[ $i ] = floatval( $request->params[ $i ] );
+        }
     }
 
     static public function get( string $url, int $index, $default )
@@ -25,7 +35,7 @@ class Router
         return $default;
     }
 
-    static public function param( string $url, int $index)
+    static public function param( string $url )
     {
         $url = trim( $url );
         $params = array();

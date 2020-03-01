@@ -10,15 +10,15 @@
             <div class="mb-5"></div>
             <h2 class="text-center"><?php echo $title ?></h2>
             <div class="mb-5"></div>
-            <?php Form::Begin( "register", "/user/registerConfirm" ) ?>
+            <form id="register" name="register" action="/user/registerConfirm" method="post">
                 <div class="text-danger"><?php echo $error; ?></div>
 
                 <h5 class="text-center">Information de connexion</h5>
                 <div class="form-group">
-                    <?php Form::Input( "text", array( "placeholder" => "Email"), "email" ) ?>
+                    <?php Form::Input( "text", array( "placeholder" => "Email", "required" ), "email" ) ?>
                 </div>
                 <div class="form-group">
-                    <?php Form::Input( "password", array( "placeholder" => "Mot de passe"), "password" ) ?>
+                    <?php Form::Input( "password", array( "placeholder" => "Mot de passe", "required" ), "password" ) ?>
                 </div>
                 <div class="mb-3"></div>
 
@@ -33,26 +33,29 @@
                 </div>
 
                 <div class="form-group">
-                    <?php Form::Select( array(), "pays", $pays, array( "id", "nom" ) ) ?>
+                    <?php Form::Select( array( "required" ), "pays", $pays, array( "id", "nom" ) ) ?>
                 </div>
                 <div class="form-group">
-                    <?php Form::Input( "text", array( "placeholder" => "Prénom"), "firstname" ) ?>
+                    <?php Form::Input( "text", array( "placeholder" => "Prénom", "required" ), "firstname" ) ?>
                 </div>
                 <div class="form-group">
-                    <?php Form::Input( "text", array( "placeholder" => "Prénom"), "lastname" ) ?>
+                    <?php Form::Input( "text", array( "placeholder" => "Nom", "required" ), "lastname" ) ?>
                 </div>
                 <div class="form-group">
-                    <?php Form::Input( "text", array( "placeholder" => "Adresse"), "adresse" ) ?>
+                    <?php Form::Input( "text", array( "placeholder" => "Adresse", "required" ), "adresse" ) ?>
                 </div>
                 <div class="form-group">
-                    <?php Form::Input( "text", array( "placeholder" => "Ville"), "ville" ) ?>
+                    <?php Form::Input( "text", array( "placeholder" => "Ville", "required" ), "ville" ) ?>
                 </div>
                 <div class="form-group">
-                    <?php Form::Input( "text", array( "placeholder" => "Code postal"), "codepostal" ) ?>
+                    <?php Form::Input( "text", array( "placeholder" => "Code postal", "required" ), "codepostal" ) ?>
                 </div>
 
-                <button type="submit" class="btn btn-success">Confirmer</button>
-            <?php Form::End( ) ?>
+                <div class="form-group text-center">
+                    <button type="submit" class="btn btn-success">Confirmer</button>
+                    <a class="btn btn-primary" href="/">Retour</a>
+                </div>
+            </form>
         </div>
     </div>
 </div>

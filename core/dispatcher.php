@@ -18,16 +18,18 @@ class Dispatcher
             {
                 http_response_code(404);
                 echo 'Controller not found !!!';
-                exit(0);
+                exit();
             }
 
             if (!method_exists( $controller, $this->request->action ))
             {
                 http_response_code(404);
                 echo 'Action '.$this->request->action.' not found !!!';
+                exit();
             }
             else
             {
+                call_user_func_array( [ $controller, 'parent::__construct' ], array() );
                 call_user_func_array( [ $controller, $this->request->action ], $this->request->params );
             }
         }
@@ -51,7 +53,7 @@ class Dispatcher
     public function load()
     {
         $name = $this->request->controller. "controller";
-        $file = ROOT. 'controllers/' .$name. '.php';
+        $file = CONTROLLERS. '/'. $name .'.php';
         
         if (!is_file($file))
             return null;

@@ -10,20 +10,18 @@
             <div class="mb-5"></div>
 
             <div class="text-danger"><?php echo $error; ?></div>
-            <?php Form::Begin( "login", "/user/loginConfirm" ) ?>
+            <form id="login" name="login" action="/user/loginConfirm?redirect=<?php echo $url ?>" method="post">
                 <div class="form-group">
-                    <?php Form::Input( "text", array( "placeholder" => "Email"), "email" ) ?>
+                    <?php Form::Input( "text", array( "placeholder" => "Email", "required"), "email" ) ?>
                 </div>
                 <div class="form-group">
-                    <?php Form::Input( "password", array( "placeholder" => "Mot de passe"), "password" ) ?>
+                    <?php Form::Input( "password", array( "placeholder" => "Mot de passe", "required"), "password" ) ?>
                 </div>
                 <div class="form-group text-center">
                     <button type="submit" class="btn btn-success">Confirmer</button>
+                    <a class="btn btn-primary" href="/user/register">Inscription</a>
                 </div>
-                <div class="form-group text-center">
-                    <a class="btn btn-default" href="/user/register">Inscription</a>
-                </div>
-            <?php Form::End( ) ?>
+            <form>
         </div>
     </div>
 </div>

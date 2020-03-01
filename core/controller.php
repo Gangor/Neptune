@@ -1,6 +1,6 @@
 <?php
 
-require ROOT. "/core/users.php";
+require CORE. "/users.php";
 
 class Controller
 {
@@ -8,16 +8,16 @@ class Controller
     var $section = [];
     var $user;
 
-    function __construct()
+    public function __construct()
     {
-        $this->user = new Users();
-
         if ( Session::Loggin() ) 
         {
+            $users = new Users();
             $userId = Session::get( 'userId' );
-            $user = $this->user->GetUserById( $userId );
+            $user = $users->GetUserById( $userId );
             
             $this->view[ 'user' ] = $user;
+            $this->user = $user;
         }
         
         $this->view[ 'error' ] = "";
@@ -29,7 +29,8 @@ class Controller
 
         ob_start();
 
-        $file = ROOT. 'views/' .strtolower( str_replace( 'Controller', '', get_class( $this ) ) ). '/' .$action_name. '.php';
+        $controller = strtolower( str_replace( 'Controller', '', get_class( $this ) ) );
+        $file = VIEWS. '/'. $controller .'/'. $action_name .'.php';
 
         if ( !is_file( $file ) )
             throw new Exception( 'View not found !!!' );
@@ -40,13 +41,31 @@ class Controller
 
         if ( $layout )
         {
-            $file = ROOT. 'views/layouts/' .$layout. '.php';
+            $file = VIEWS. '/layouts/'. $layout .'.php';
 
             if ( !is_file( $file ) )
                 throw new Exception( 'Layout not found !!!');
             
             require( $file );
         }
+    }
+
+    function renderSection( $name )
+    {
+        if ( isset( $this->section[ $name ] ) )
+        {
+            extract( $this->view );
+            echo $this->section[ $name ];
+        }
+    }
+
+    function renderPartial( $file )
+    {
+        if ( !is_file( $file ) )
+            echo 'Partial not found !!!';
+
+        extract( $this->view );
+        require( $file );
     }
 
     function getPost( string $name )
@@ -78,7 +97,7 @@ class Controller
 
     function statusCode( int $code, string $message )
     {
-        header( $_SERVER['SERVER_PROTOCOL'].' '.$code.' '.$message );
+        header( $_SERVER['SERVER_PROTOCOL'] .' '. $code .' '. $message );
         exit();
     }
 }

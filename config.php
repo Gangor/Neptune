@@ -11,11 +11,15 @@ define( "DB_HOST", "localhost" );
 define( "DB_USR", "root" );
 define( "DB_PWD", "valkyria" );
 
-// Core
+// PATH
 
+define( "CORE", ROOT. "/core" );
+define( "CONTROLLERS", ROOT. '/controllers' );
+define( "VIEWS", ROOT. '/views' );
 
-// Session
+// Router
 
-define( "SESSION_TIMEOUT", 3600 );
+define( "CONTROLLER_DEF", "home" );
+define( "ACTION_DEF", "index" );
 
 ?>

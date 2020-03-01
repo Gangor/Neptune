@@ -1,6 +1,6 @@
 <?php
 
-require ROOT. "/core/controller.php";
+require CORE. "/controller.php";
 
 class testController extends Controller
 {

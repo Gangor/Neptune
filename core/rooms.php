@@ -75,7 +75,7 @@ class Rooms
 
             if ( $statement->execute() )
             {
-                $tarifs = $statement->fetchAll( PDO::FETCH_OBJ );
+                $tarifs = $statement->fetchAll();
                 $statement->closeCursor();
 
                 return $tarifs;
@@ -148,12 +148,13 @@ class Rooms
         if ( $this->conn )
         {
             $statement = $this->conn->prepare( "UPDATE chambres SET capacite = :capacite, exposition = :exposition, douche = :douche, etage = :etage, tarif_id = :tarif_id WHERE numero = :numero" );
+            $statement->bindParam(':numero', $chambre->numero );
             $statement->bindParam(':capacite', $chambre->capacite );
             $statement->bindParam(':exposition', $chambre->exposition );
             $statement->bindParam(':douche', $chambre->douche );
             $statement->bindParam(':etage', $chambre->etage );
             $statement->bindParam(':tarif_id', $chambre->tarif_id );
-            $statement->bindParam(':numero', $chambre->numero );
+
             
             return $statement->execute();
         }

@@ -5,17 +5,6 @@
         [ 'value' => 'Mademoiselle' ],
         [ 'value' => 'Madame' ],
     ];
-    $validations = [
-        'email' => [ 'placeholder' => 'Email *', 'maxlength' => '60', 'required' ],
-        'password' => [ 'placeholder' => 'Mot de passe *', 'maxlength' => '50', 'required' ],
-        'civilite' => [ 'required' ],
-        'firstname' => [ 'placeholder' => 'Prénom *', 'maxlength' => '70', 'required' ],
-        'lastname' => [ 'placeholder' => 'Nom *', 'maxlength' => '100', 'required' ],
-        'adresse' => [ 'placeholder' => 'Adresse', 'maxlength' => '200' ],
-        'ville' => [ 'placeholder' => 'Ville', 'maxlength' => '200' ],
-        'codepostal' => [ 'placeholder' => "Code postal", 'minlength' => '5', 'maxlength' => '5' ],
-        'pays' => [],
-    ];
 ?>
 
 <div class="container">
@@ -29,35 +18,35 @@
 
                 <h5 class="text-center">Information de connexion</h5>
                 <div class="form-group">
-                    <?php Form::Input( 'email', $validations[ 'email' ], 'email' ) ?>
+                    <?php Form::Input( $model->Validations[ 'Email' ], $model->Email ) ?>
                 </div>
                 <div class="form-group">
-                    <?php Form::Input( 'password', $validations[ 'password' ], 'password' ) ?>
+                    <?php Form::Input( $model->Validations[ 'Password' ], $model->Password ) ?>
                 </div>
                 <div class="mb-3"></div>
 
                 <h5 class="text-center">Information personnelle</h5>
 
                 <div class="form-group">
-                    <?php Form::Select( 'civilite', $validations[ 'civilite' ], $civilites, array( 'value', 'value' ) ) ?>
+                    <?php Form::Select( $model->Validations[ 'Civilite' ], $civilites, array( 'value', 'value' ), $model->Civilite ) ?>
                 </div>
                 <div class="form-group">
-                    <?php Form::Select( 'pays', $validations[ 'pays' ], $pays, array( 'id', 'nom' ) ) ?>
+                    <?php Form::Select( $model->Validations[ 'Pays' ], $pays, array( 'id', 'nom' ), $model->Pays ) ?>
                 </div>
                 <div class="form-group">
-                    <?php Form::Input( 'text', $validations[ 'firstname' ], 'firstname' ) ?>
+                    <?php Form::Input( $model->Validations[ 'Prenom' ], $model->Prenom ) ?>
                 </div>
                 <div class="form-group">
-                    <?php Form::Input( 'text', $validations[ 'lastname' ], 'lastname' ) ?>
+                    <?php Form::Input( $model->Validations[ 'Nom' ], $model->Nom ) ?>
                 </div>
                 <div class="form-group">
-                    <?php Form::Input( 'text', $validations[ 'adresse' ], 'adresse' ) ?>
+                    <?php Form::Input( $model->Validations[ 'Adresse' ], $model->Adresse ) ?>
                 </div>
                 <div class="form-group">
-                    <?php Form::Input( 'text', $validations[ 'ville' ], 'ville' ) ?>
+                    <?php Form::Input( $model->Validations[ 'Ville' ], $model->Ville ) ?>
                 </div>
                 <div class="form-group">
-                    <?php Form::Input( 'text', $validations[ 'codepostal' ], 'codepostal' ) ?>
+                    <?php Form::Input( $model->Validations[ 'CodePostal' ], $model->CodePostal ) ?>
                 </div>
 
                 <div class="form-group text-center">
@@ -72,10 +61,4 @@
 <div class="mb-5"></div>
 
 <?php 
-$this->section[ "scripts" ] = 
-'
-    <script>
-        $("#register").validate({ lang: \'fr\' });
-    </script>
-'; 
 ?>

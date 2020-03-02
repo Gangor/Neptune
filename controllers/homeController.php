@@ -12,8 +12,8 @@ class homeController extends Controller
      */
     public function index()
     {
-        $this->view["title"] = "Accueil";
-        $this->render("index");
+        $this->view[ 'title' ] = 'Accueil';
+        $this->render( 'index' );
     }
 }
 

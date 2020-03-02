@@ -15,6 +15,7 @@ define( "DB_PWD", "valkyria" );
 
 define( "CORE", ROOT. "/core" );
 define( "CONTROLLERS", ROOT. '/controllers' );
+define( "MODELS", ROOT. '/models' );
 define( "VIEWS", ROOT. '/views' );
 
 // Router

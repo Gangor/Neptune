@@ -47,11 +47,14 @@ class Controller
      * Démarre le rendu de la page
      * 
      * @param       string $viewname    Nom du fichier de la vue
+     * @param       string $model       Modèle de la vue
      * @param       string $layout      Habillage de la page
      * 
      */
-    public function render( string $viewname, string $layout = "default")
+    public function render( string $viewname, object $model = null, string $layout = "default")
     {
+        $this->view[ 'model' ] = $model;
+
         extract( $this->view );
 
         ob_start();
@@ -107,104 +110,6 @@ class Controller
 
         extract( $this->view );
         require( $file );
-    }
-
-    /**
-     * 
-     * Récupére la valeur d'un post
-     * 
-     * @param       string $name    Clef de l'array
-     * @return      string
-     * 
-     */
-    function getPost( string $name )
-    {
-        if ( isset( $_POST[ $name ] ) )
-            if ( !empty( $_POST[ $name ] ) )
-                return $_POST[ $name ];
-
-        return NULL;
-    }
-
-    /**
-     * 
-     * Vérifie la validité de plusieurs post (Basique)
-     * 
-     * @param       array $names    Clefs de l'array
-     * @return      bool
-     * 
-     */
-    function validPosts( array $names )
-    {
-        foreach ( $names as $name )
-        {
-            if ( !isset( $_POST[ $name ] ) || empty( $_POST[ $name ] ) )
-                return false;
-        }
-        return true;
-    }
-
-    /**
-     * 
-     * Vérifie la validité d'un post (Avancé)
-     * 
-     * @param       string  $name       Clef de l'array
-     * @param       string  $type       Type de donnée
-     * @param       int     $min        Taille minimum
-     * @param       int     $max        Taille maximum
-     * @param       bool    $required   Requis
-     * @return      bool
-     * 
-     */
-    function validPost( string $name, string $type, int $min, int $max, bool $required )
-    {
-        if ( ( !isset( $_POST[ $name ] ) || empty( $_POST[ $name ] ) ) && !$required )
-            return true;
-        elseif ( ( !isset( $_POST[ $name ] ) || empty( $_POST[ $name ] ) ) && $required )
-            return false;
-        
-        switch ( $type )
-        {
-            case 'text':
-            case 'password':
-                if ( strlen( $_POST[ $name ] ) < $min && $min != -1 || 
-                     strlen( $_POST[ $name ] ) > $max && $max != -1 )
-                    return false;
-            break;
-
-            case 'number':
-                if ( $_POST[ $name ] < $min && $min != -1 || 
-                     $_POST[ $name ] > $max && $max != -1 )
-                    return false;
-            break;
-
-            case 'email': 
-                if ( !filter_var( $_POST[ $name ], FILTER_VALIDATE_EMAIL )) 
-                    return false;
-            break;
-
-            case 'date':
-                if ( !$this->validateDate( $_POST[ $name ] ) )
-                    return false;
-            break;
-        } 
-
-        return true;
-    }
-
-    /**
-     * 
-     * Vérifie la validité d'une date
-     * 
-     * @param       string  $date       Date sous forme de chaine de caractère
-     * @param       string  $format     Format de la date
-     * @return      bool
-     * 
-     */
-    function validateDate( string $date, string $format = 'Y-m-d')
-    {
-        $d = DateTime::createFromFormat($format, $date);
-        return $d && $d->format($format) === $date;
     }
 
     /**

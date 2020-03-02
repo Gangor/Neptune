@@ -1,10 +1,5 @@
 <?php
     $title = "Changer de mot de passe";
-    $validations = [
-        'oldpassword' => [ 'placeholder' => 'Actuel *', 'maxlength' => '50', 'required' ],
-        'newpassword' => [ 'placeholder' => 'Nouveau *', 'maxlength' => '50', 'required' ],
-        'confirm' => [ 'placeholder' => 'Confirmation *', 'maxlength' => '50', 'equalTo' => '#newpassword', 'required' ],
-    ];
 ?>
 
 <div class="mt-5"></div>
@@ -19,17 +14,17 @@
                 <div class="text-danger"><?php echo $error; ?></div>
 
                 <?php if ( isset( $success ) ) { ?>
-                    <p class="text-center text-success">Vos informations personnelles ont été mise à jour avec succès.</p>
+                    <p class="text-center text-success">Votre mot de passe a été mise à jour avec succès.</p>
                 <?php } ?>
 
                 <div class="form-group">
-                    <?php Form::Input( 'password', $validations[ 'oldpassword' ], 'oldpassword' ) ?>
+                    <?php Form::Input( $model->Validations[ 'OldPassword' ], $model->OldPassword ) ?>
                 </div>
                 <div class="form-group">
-                    <?php Form::Input( 'password', $validations[ 'newpassword' ], 'newpassword' ) ?>
+                    <?php Form::Input( $model->Validations[ 'NewPassword' ], $model->NewPassword ) ?>
                 </div>
                 <div class="form-group">
-                    <?php Form::Input( 'password', $validations[ 'confirm' ], 'confirm' ) ?>
+                    <?php Form::Input( $model->Validations[ 'Confirm' ], $model->Confirm ) ?>
                 </div>
 
                 <div class="form-group text-center">

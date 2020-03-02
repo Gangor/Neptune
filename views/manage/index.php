@@ -5,15 +5,6 @@
         [ 'value' => 'Mademoiselle' ],
         [ 'value' => 'Madame' ],
     ];
-    $validations = [
-        'civilite' => [ "required" ],
-        'firstname' => [ "placeholder" => "Prénom *", "maxlength" => '70', "required" ],
-        'lastname' => [ "placeholder" => "Nom *", "maxlength" => '100', "required" ],
-        'adresse' => [ "placeholder" => "Adresse", "maxlength" => '200' ],
-        'ville' => [ "placeholder" => "Ville", "maxlength" => '200' ],
-        'codepostal' => [ "placeholder" => "Code postal", "minlength" => '5', "maxlength" => '5' ],
-        'pays' => [ ]
-    ];
 ?>
 
 <div class="mt-5"></div>
@@ -43,27 +34,27 @@
                 <h5 class="text-center">Modifier les informations personnelles</h5>
 
                 <div class="form-group">
-                    <?php Form::Select( 'civilite', $validations[ 'civilite' ], $civilites, array( 'value', 'value' ), $user->civilite ) ?>
+                    <?php Form::Select( $model->Validations[ 'Civilite' ], $civilites, array( 'value', 'value' ), $model->Civilite ) ?>
                 </div>
                 <div class="form-group">
-                    <?php Form::Input( "text", $validations[ 'firstname' ], 'firstname', $user->prenom ) ?>
+                    <?php Form::Input( $model->Validations[ 'Prenom' ], $model->Prenom ) ?>
                 </div>
                 <div class="form-group">
-                    <?php Form::Input( "text", $validations[ 'lastname' ], 'lastname', $user->nom ) ?>
+                    <?php Form::Input( $model->Validations[ 'Nom' ], $model->Nom ) ?>
                 </div>
 
                 <?php if ( !$user->admin ) { ?>
                     <div class="form-group">
-                        <?php Form::Select( 'pays', $validations[ 'pays' ], $pays, array( 'id', 'nom' ), $user->pays_id ) ?>
+                    <?php Form::Select( $model->Validations[ 'Pays' ], $pays, array( 'id', 'nom' ), $model->Pays ) ?>
                     </div>
                     <div class="form-group">
-                        <?php Form::Input( 'text', $validations[ 'adresse' ], 'adresse', $user->adresse ) ?>
+                    <?php Form::Input( $model->Validations[ 'Adresse' ], $model->Adresse ) ?>
                     </div>
                     <div class="form-group">
-                        <?php Form::Input( 'text', $validations[ 'ville' ], 'ville', $user->ville ) ?>
+                    <?php Form::Input( $model->Validations[ 'Ville' ], $model->Ville ) ?>
                     </div>
                     <div class="form-group">
-                        <?php Form::Input( 'text', $validations[ 'codepostal' ], 'codepostal', $user->codePostal ) ?>
+                    <?php Form::Input( $model->Validations[ 'CodePostal' ], $model->CodePostal ) ?>
                     </div>
                 <?php } ?>
 
@@ -86,10 +77,4 @@
 <div class="mb-5"></div>
 
 <?php 
-$this->section[ "scripts" ] = 
-'
-    <script>
-        $("#edit").validate({ lang: \'fr\' });
-    </script>
-'; 
 ?>

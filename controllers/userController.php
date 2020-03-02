@@ -2,6 +2,9 @@
 
 require CORE. "/controller.php";
 
+require MODELS. "/user/loginModel.php";
+require MODELS. "/user/registerModel.php";
+
 class userController extends Controller
 {
     private $users;
@@ -19,10 +22,12 @@ class userController extends Controller
      * @param   string $redirect    Lien de redirection
      * 
      */
-    public function login( string $redirect = "" )
+    public function login( string $redirect = '' )
     {
-        $this->view["url"] = $redirect;
-        $this->render("login");
+        $model = new LoginModel( true );
+
+        $this->view[ 'url' ]    = $redirect;
+        $this->render( 'login', $model );
     }
 
     /*
@@ -33,31 +38,30 @@ class userController extends Controller
      * @param   string $redirect    Lien de redirection
      * 
      */
-    public function loginconfirm( string $redirect = "" )
+    public function loginconfirm( string $redirect = '' )
     {
-        if ( $this->validPost( 'email', 'email', -1, 60, true ) &&
-             $this->validPost( 'password', 'password', -1, 50, true ) )
-        {
-            $email      = $this->getPost( "email" );
-            $user       = $this->users->GetUserByEmail( $email );
-            $password   = $_POST[ "password" ];
+        $model = new LoginModel();
 
-            if ( $user == null)          $this->view["error"] = "Identifiant ou mot de passe incorrect.";
-            else if ( !$user->confirme ) $this->view["error"] = "Ce compte n'a pas été activé.";            
+        if ( $model->IsValid )
+        {
+            $user = $this->users->GetUserByEmail( $model->Email );
+
+            if ( $user == null)          $this->view[ 'error' ] = 'Identifiant ou mot de passe incorrect.';
+            else if ( !$user->confirme ) $this->view[ 'error' ] = 'Ce compte n\'a pas été activé.';            
             else
             {
-                if ( sha1( $password ) == $user->motdepasse )
+                if ( $user->motdepasse == sha1( $model->Password ) )
                 {
                     Session::set( 'userId', $user->id );
                     Router::redirect( $redirect );
                 }
-                else $this->view["error"] = "Identifiant ou mot de passe incorrect.";
+                else $this->view[ 'error' ] = 'Identifiant ou mot de passe incorrect.';
             }
         }
-        else $this->view["error"] = "Un ou plusieurs champs ne sont pas correctement remplis.";
+        else $this->view[ 'error' ] = 'Un ou plusieurs champs ne sont pas correctement remplis.';
 
-        $this->view["url"] = $redirect;
-        $this->render("login");
+        $this->view[ 'url' ]    = $redirect;        
+        $this->render( 'login', $model );
     }
 
     /*
@@ -83,8 +87,10 @@ class userController extends Controller
      */
     public function register()
     {
-        $this->view["pays"] = $this->users->GetPays();
-        $this->render("register");
+        $model = new registerModel( true );
+        
+        $this->view[ 'pays' ]   = $this->users->GetPays();
+        $this->render( 'register', $model );
     }
 
     /*
@@ -95,48 +101,40 @@ class userController extends Controller
      */
     public function registerconfirm()
     {
-        if ( $this->validPost( 'email', 'email', -1, 60, true ) &&
-             $this->validPost( 'password', 'password', -1, 50, true ) &&
-             $this->validPost( 'civilite', 'text', -1, 20, true ) &&
-             $this->validPost( 'firstname', 'text', -1, 70, true ) &&
-             $this->validPost( 'lastname', 'text', -1, 100, true ) &&
-             $this->validPost( 'pays', 'number', -1, -1, false ) &&
-             $this->validPost( 'adresse', 'text', -1, 200, false ) &&
-             $this->validPost( 'ville', 'text', -1, 200, false ) &&
-             $this->validPost( 'codepostal', 'text', 5, 5, false ) )
+        $model = new registerModel();
+        
+        if ( $model->IsValid )
         {
-            $email = $this->getPost( "email" );
-
             // Exist user ?
-            if ( $this->users->GetUserByEmail( $email ) == null )
+            if ( !$this->users->GetUserByEmail( $model->Email ) )
             {
-                $newUser = array(
-                    'civilite'      => $this->getPost( "civilite" ),
-                    'nom'           => $this->getPost( "firstname" ),
-                    'prenom'        => $this->getPost( "lastname" ),
-                    'codePostal'    => $this->getPost( "codepostal" ),
-                    'adresse'       => $this->getPost( "adresse" ),
-                    'ville'         => $this->getPost( "ville" ),
-                    'pays'          => intval( $this->getPost( "pays" ) ),
-                    'identifiant'   => $email,
-                    'motdepasse'    => sha1( $this->getPost( "password" ) ),
-                    'cle'           => uniqid(),
-                    'confirme'      => false,
-                    'admin'         => null
-                );
+                $newUser = new stdClass();
+
+                $newUser->civilite      = $model->Civilite;
+                $newUser->nom           = $model->Nom;
+                $newUser->prenom        = $model->Prenom;
+                $newUser->codePostal    = $model->CodePostal;
+                $newUser->adresse       = $model->Adresse;
+                $newUser->ville         = $model->Ville;
+                $newUser->pays_id       = $model->Pays;
+                $newUser->identifiant   = $model->Email;
+                $newUser->motdepasse    = sha1( $model->Password );
+                $newUser->cle           = uniqid();
+                $newUser->confirme      = false;
+                $newUser->admin         = null;
                 
-                if ( $this->users->Create( (object)$newUser ) )
+                if ( $this->users->Create( $newUser ) )
                 {
                     Router::redirectLocal( 'user', 'login' );
                 }
-                else $this->view["error"] = "Une erreur ses produite lors de la création du compte.";
+                else $this->view[ 'error' ] = 'Une erreur ses produite lors de la création du compte.';
             }
-            else $this->view["error"] = "Cette adresse mail est déjà utilisé.";
+            else $this->view[ 'error' ] = 'Cette adresse mail est déjà utilisé.';
         }
-        else $this->view["error"] = "Un ou plusieurs champs ne sont pas correctement remplis.";
+        else $this->view[ 'error' ] = 'Un ou plusieurs champs ne sont pas correctement remplis.';
 
-        $this->view["pays"] = $this->users->GetPays();
-        $this->render("register");
+        $this->view[ 'pays' ]   = $this->users->GetPays();
+        $this->render( 'register', $model );
     }
 }
 

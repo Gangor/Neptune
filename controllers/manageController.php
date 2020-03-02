@@ -2,6 +2,9 @@
 
 require CORE. "/controller.php";
 
+require MODELS. "/manage/editModel.php";
+require MODELS. "/manage/editPasswordModel.php";
+
 class manageController extends Controller
 {
     private $users;
@@ -21,9 +24,13 @@ class manageController extends Controller
     {
         if ( !$this->user )
             $this->unauthorized();
-            
-        $this->view["pays"] = $this->users->GetPays();
-        $this->render("index");
+        
+        $model = new EditModel( true );
+        $model->Parse( $this->user );
+
+        $this->view[ 'pays' ]   = $this->users->GetPays();
+
+        $this->render( 'index', $model );
     }
 
     /*
@@ -37,36 +44,33 @@ class manageController extends Controller
         if ( !$this->user )
             $this->unauthorized();
 
-        if ( $this->validPost( 'civilite', 'text', -1, 20, true ) &&
-             $this->validPost( 'firstname', 'text', -1, 70, true ) &&
-             $this->validPost( 'lastname', 'text', -1, 100, true ) && 
-             $this->validPost( 'pays', 'number', -1, -1, false ) &&
-             $this->validPost( 'adresse', 'text', -1, 200, false ) &&
-             $this->validPost( 'ville', 'text', -1, 200, false ) &&
-             $this->validPost( 'codepostal', 'text', 5, 5, false ) )
+        $model = new EditModel();
+
+        if ( $model->IsValid )
         {
-            $this->user->civilite = $this->getPost( 'civilite' );
-            $this->user->prenom = $this->getPost( 'firstname' );
-            $this->user->nom = $this->getPost( 'lastname' );
+            $this->user->civilite   = $model->Civilite;
+            $this->user->prenom     = $model->Prenom;
+            $this->user->nom        = $model->Nom;
 
             if ( !$this->user->admin )
             {
-                $this->user->pays_id = $this->getPost( 'pays' );
-                $this->user->adresse = $this->getPost( 'adresse' );
-                $this->user->ville = $this->getPost( 'ville' );
-                $this->user->codePostal = $this->getPost( 'codepostal' );
+                $this->user->pays_id    = (int)$model->Pays;
+                $this->user->adresse    = $model->Adresse;
+                $this->user->ville      = $model->Ville;
+                $this->user->codePostal = $model->CodePostal;
             }
 
             if ( $this->users->Update( $this->user ) )
             {
-                $this->view[ "success" ] = true;
+                $this->view[ 'success' ] = true;
             }
-            else $this->view["error"] = "Une erreur ses produite lors de l'édition du compte.";
+            else $this->view[ 'error' ] = 'Une erreur ses produite lors de l\'édition du compte.';
         }
-        else $this->view["error"] = "Un ou plusieurs champs ne sont pas correctement remplis.";
+        else $this->view[ 'error' ] = 'Un ou plusieurs champs ne sont pas correctement remplis.';
 
-        $this->view["pays"] = $this->users->GetPays();
-        $this->render("index");
+        $this->view[ 'pays' ]   = $this->users->GetPays();
+
+        $this->render( 'index', $model );
     }
 
     /*
@@ -80,7 +84,8 @@ class manageController extends Controller
         if ( !$this->user )
             $this->unauthorized();
 
-        $this->render("editpassword");
+        $model = new editPasswordModel( true );
+        $this->render( 'editpassword', $model );
     }
 
     /*
@@ -93,32 +98,29 @@ class manageController extends Controller
         if ( !$this->user )
             $this->unauthorized();
 
-        if ( $this->validPost( 'oldpassword', 'password', -1, 50, true ) && 
-             $this->validPost( 'newpassword', 'password', -1, 50, true ) && 
-             $this->validPost( 'confirm', 'password', -1, 50, true ) )
-        {
-            $oldpassword = $this->getPost( 'oldpassword' );
-            $newpassword = $this->getPost( 'newpassword' );
-            $confirm = $this->getPost( 'confirm' );
+        $model = new editPasswordModel();
 
-            if ( $newpassword == $confirm )
+        if ( $model->IsValid )
+        {
+            if ( $model->NewPassword == $model->Confirm )
             {
-                if ( sha1( $oldpassword ) == $this->user->motdepasse )
+                if ( $this->user->motdepasse == sha1( $model->OldPassword ) )
                 {
-                    $this->user->motdepasse = sha1( $newpassword );
+                    $this->user->motdepasse = sha1( $model->NewPassword );
+
                     if ( $this->users->Update( $this->user ) )
                     {
-                        $this->view[ "success" ] = true;
+                        $this->view[ 'success' ] = true;
                     }
-                    else $this->view["error"] = "Une erreur ses produite lors du changement de mot de passe.";
+                    else $this->view[ 'error' ] = 'Une erreur ses produite lors du changement de mot de passe.';
                 }
-                else $this->view["error"] = "Mot de passe actuel incorrect.";
+                else $this->view[ 'error' ] = 'Mot de passe actuel incorrect.';
             }
-            else $this->view["error"] = "Le nouveau mot de passe et la confirmation ne correspondent pas.";
+            else $this->view[ 'error' ] = 'Le nouveau mot de passe et la confirmation ne correspondent pas.';
         }
-        else $this->view["error"] = "Un ou plusieurs champs ne sont pas correctement remplis.";
+        else $this->view[ 'error' ] = 'Un ou plusieurs champs ne sont pas correctement remplis.';
 
-        $this->render("editpassword");
+        $this->render( 'editpassword', $model );
     }
 
     /*

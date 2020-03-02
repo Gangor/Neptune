@@ -12,7 +12,7 @@ class Form
      * @param   string $value   Valeur de l'input
      * 
      */
-    static function Input( string $type, array $attrs, string $name = "", ?string $value = "" )
+    static function Input( array $attrs, ?string $value = "" )
     {
         $attribute = '';
 
@@ -24,10 +24,10 @@ class Form
                 $attribute .= ' '.$attr.'="'.$val.'"';
         }
 
-        if ( isset( $_POST[ $name ] ) )
-            $value = $_POST[ $name ];
-
-        echo '<input type="'. $type .'" id="'. $name .'" name="'. $name .'" class="form-control" value="'. $value .'"'. $attribute .' />';
+        if ( $attrs[ 'type' ] == 'checkbox' )
+            echo '<input '. $attribute .' '. ( boolval( $value ) ? 'checked="true"' : '') .'" />';
+        else
+            echo '<input '. $attribute .' value="'. $value .'" />';
     }
 
     /**
@@ -41,12 +41,9 @@ class Form
      * @param   string $value   Valeur de l'input
      * 
      */
-    static function Select( string $name, array $attrs, array $lists, array $fields, ?string $value = "" )
+    static function Select( array $attrs, array $lists, array $fields, ?string $value = "" )
     {
         $attribute = '';
-
-        if ($value == null)
-            $value = '';
 
         foreach ($attrs as $attr => $val )
         {
@@ -56,20 +53,16 @@ class Form
                 $attribute .= ' '.$attr.'="'.$val.'"';
         }
 
-        echo '<select id="'. $name .'" name="'. $name .'" class="form-control"'. $attribute .'>';
+        echo '<select '. $attribute .'>';
 
         foreach ($lists as $item)
         {
-            $selected = "";
-
-            if ( isset( $_POST[ $name ] ) )
-                if ( $_POST[ $name ] == $item[ $fields[ 0 ] ] )
-                    $selected = ' selected';
+            $attr = '';
 
             if ( $value == $item[ $fields[ 0 ] ] )
-                $selected = ' selected';
+                $attr = ' selected';            
 
-            echo '<option value="'. $item[ $fields[ 0 ] ] .'"'.$selected.'>'.$item[ $fields[ 1 ] ].'</option>';
+            echo '<option value="'. $item[ $fields[ 0 ] ] .'"'.$attr.'>'.$item[ $fields[ 1 ] ].'</option>';
         }
 
         echo '</select>';

@@ -62,19 +62,32 @@
                 </li>
             </ul>
             <ul class="nav navbar-nav">
-            <?php if ( !Session::Loggin() ) { ?>
+            <?php if ( Session::Loggin() && $user->admin ) { ?>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown">Admin<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                    </ul>
+                </li>
+            <?php } ?>
+
+            <?php if ( Session::Loggin() ) { ?>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown">Mon compte<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/manage/index">Paramètres</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/user/logout">Déconnexion</a>
+                        </li>
+                    </ul>
+                </li>
+            <?php } else { ?>
                 <li class="nav-item">
                     <a class="nav-link" href="/User/Login">Se connecter</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/User/Register">Inscription</a>
-                </li>
-            <?php } else { ?>
-                <li class="nav-item">
-                    <a class="nav-link" href="/manage/index"><?php echo $user->prenom.' '.$user->nom ?></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/user/logout">Déconnexion</a>
                 </li>
             <?php } ?>
             </ul>

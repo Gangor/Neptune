@@ -6,11 +6,24 @@ class Rooms
 {
     var $conn;
 
+    /**
+     * 
+     * Initialise une instance de gestionnaire de chambre
+     * 
+     */
     function __construct()
     {
         $this->conn = Database::GetConnection();
     }
 
+    /**
+     * 
+     * Crée une chambre en base de donnée
+     * 
+     * @param   object $chambre    Chambre à ajouter
+     * @return  int
+     * 
+     */
     function Create( object $chambre )
     {
         if ( $this->conn )
@@ -28,17 +41,32 @@ class Rooms
         }
     }
 
+    /**
+     * 
+     * Supprime une chambre en base de donnée
+     * 
+     * @param   int $id    ID de la chambre
+     * @return  bool
+     * 
+     */
     function Delete( int $numero )
     {
         if ( $this->conn )
         {
-            $statement = $this->conn->prepare( 'DELETE FROM clients where numero = :numero' );
+            $statement = $this->conn->prepare( 'DELETE FROM chambres where numero = :numero' );
             $statement->bindParam(':numero', $numero );
-
+            
             return $statement->execute();
         }
     }
 
+    /**
+     * 
+     * Récupère la liste des tarifs en base de donnée
+     * 
+     * @return object[]
+     * 
+     */
     function GetTarifs()
     {
         if ( $this->conn )
@@ -55,6 +83,15 @@ class Rooms
         }
     }
 
+    /**
+     * 
+     * Récupère la liste des chambres et permet un trie personnalisé
+     * 
+     * @param   string $column  Colonne à filtrer
+     * @param   string $filter  Valeur de la colonne
+     * @return  object[]
+     * 
+     */
     function GetRooms( string $column = 'numero', string $filter = '%%' )
     {
         if ( $this->conn )
@@ -73,6 +110,14 @@ class Rooms
         }
     }
 
+    /**
+     * 
+     * Récupère une chambre à partir sont ID en base de donnée
+     * 
+     * @param   int $id    Numero de la chambre
+     * @return  object
+     * 
+     */
     function GetRoomById( int $numero )
     {
         if ( $this->conn )
@@ -90,6 +135,14 @@ class Rooms
         }
     }
 
+    /**
+     * 
+     * Mes à jour de la chambre en base de donnée
+     * 
+     * @param   object $chambre    Chambre à mettre à jour
+     * @return  bool
+     * 
+     */
     function Update( object $chambre )
     {
         if ( $this->conn )

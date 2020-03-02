@@ -12,7 +12,12 @@ class userController extends Controller
     }
 
     /*
-     * GET : /user/login
+     *
+     * GET : /user/login/{redirect}
+     * Page d'authentification
+     * 
+     * @param   string $redirect    Lien de redirection
+     * 
      */
     public function login( string $redirect = "" )
     {
@@ -21,7 +26,12 @@ class userController extends Controller
     }
 
     /*
-     * POST : /user/login
+     *
+     * POST : /user/login/{redirect}
+     * Page de confirmation d'authentification
+     * 
+     * @param   string $redirect    Lien de redirection
+     * 
      */
     public function loginconfirm( string $redirect = "" )
     {
@@ -51,7 +61,10 @@ class userController extends Controller
     }
 
     /*
+     *
      * GET : /user/logout
+     * Page de déconnexion
+     * 
      */
     public function logout()
     {
@@ -63,7 +76,10 @@ class userController extends Controller
     }
 
     /*
+     *
      * GET : /user/register
+     * Page d'inscription
+     * 
      */
     public function register()
     {
@@ -72,7 +88,10 @@ class userController extends Controller
     }
 
     /*
+     *
      * POST : /user/registerconfirm
+     * Page de confirmation d'inscription
+     * 
      */
     public function registerconfirm()
     {

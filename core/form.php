@@ -2,6 +2,16 @@
 
 class Form
 {    
+    /**
+     * 
+     * Génére un champs de formulaire à partir des informations transmits en paramètre
+     * 
+     * @param   string $type    Type d'input
+     * @param   array $attr     Personnalisation des attributs
+     * @param   string $name    Identifiant de l'input
+     * @param   string $value   Valeur de l'input
+     * 
+     */
     static function Input( string $type, array $attrs, string $name = "", ?string $value = "" )
     {
         $attribute = '';
@@ -20,6 +30,17 @@ class Form
         echo '<input type="'. $type .'" id="'. $name .'" name="'. $name .'" class="form-control" value="'. $value .'"'. $attribute .' />';
     }
 
+    /**
+     * 
+     * Génére une liste de sélection à partir des informations transmits en paramètre
+     * 
+     * @param   string $name    Identifiant de l'input
+     * @param   array $attr     Personnalisation des attributs
+     * @param   array $list     Données de référence
+     * @param   array $fields   Champs utilisé par la liste de sélection
+     * @param   string $value   Valeur de l'input
+     * 
+     */
     static function Select( string $name, array $attrs, array $lists, array $fields, ?string $value = "" )
     {
         $attribute = '';

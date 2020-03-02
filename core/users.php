@@ -6,11 +6,24 @@ class Users
 {
     var $conn;
 
+    /**
+     * 
+     * Initialise une instance de gestionnaire d'utilisateur
+     * 
+     */
     function __construct()
     {
         $this->conn = Database::GetConnection();
     }
 
+    /**
+     * 
+     * Crée un utilisateur en base de donnée
+     * 
+     * @param   object $user    Utilisateur à ajouter
+     * @return  int
+     * 
+     */
     function Create( object $user )
     {
         if ( $this->conn )
@@ -34,6 +47,14 @@ class Users
         }
     }
 
+    /**
+     * 
+     * Supprime un utilisateur en base de donnée
+     * 
+     * @param   int $id    ID de l'utilisateur
+     * @return  bool
+     * 
+     */
     function Delete( int $id )
     {
         if ( $this->conn )
@@ -45,6 +66,13 @@ class Users
         }
     }
 
+    /**
+     * 
+     * Récupère la liste des pays en base de donnée
+     * 
+     * @return object[]
+     * 
+     */
     function GetPays()
     {
         if ( $this->conn )
@@ -61,6 +89,14 @@ class Users
         }
     }
 
+    /**
+     * 
+     * Récupère une utilisateur à partir sont ID en base de donnée
+     * 
+     * @param   int $id    ID de l'utilisateur
+     * @return  object
+     * 
+     */
     function GetUserById( int $id )
     {
         if ( $this->conn )
@@ -78,6 +114,14 @@ class Users
         }
     }
 
+    /**
+     * 
+     * Récupère une utilisateur par sont email en base de donnée
+     * 
+     * @param   string $email   Email de l'utilisateur
+     * @return  object
+     * 
+     */
     function GetUserByEmail( string $email )
     {
         if ( $this->conn )
@@ -95,6 +139,14 @@ class Users
         }
     }
 
+    /**
+     * 
+     * Mes à jour un utilisateur en base de donnée
+     * 
+     * @param   object $user    Utilisateur à mettre à jour
+     * @return  bool
+     * 
+     */
     function Update( object $user )
     {
         if ( $this->conn )

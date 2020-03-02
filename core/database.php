@@ -2,6 +2,13 @@
 
 class Database
 {
+    /**
+     * 
+     * Crée une connexion avec la base de donnée preconfiguré
+     * 
+     * @return      object
+     * 
+     */
     static public function GetConnection()
     {
         try

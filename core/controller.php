@@ -4,10 +4,29 @@ require CORE. "/users.php";
 
 class Controller
 {
-    var $view = [];
-    var $section = [];
-    var $user;
+    /**
+     * Objet partagé avec les vues (partiel, principal)
+     * @var array $view
+     */
+    public $view = [];
+    
+    /**
+     * Partage de contenue entre les vues (partiel, principal)
+     * @var array $section
+     */
+    public $section = [];
 
+    /**
+     * Utilisateur actuel
+     * @var object $user
+     */
+    public $user = null;
+
+    /**
+     * 
+     * Initialisation de l'instance controller
+     * 
+     */
     public function __construct()
     {
         if ( Session::Loggin() ) 
@@ -23,14 +42,22 @@ class Controller
         $this->view[ 'error' ] = "";
     }
 
-    function render( string $action_name, string $layout = "default")
+    /**
+     * 
+     * Démarre le rendu de la page
+     * 
+     * @param       string $viewname    Nom du fichier de la vue
+     * @param       string $layout      Habillage de la page
+     * 
+     */
+    public function render( string $viewname, string $layout = "default")
     {
         extract( $this->view );
 
         ob_start();
 
         $controller = strtolower( str_replace( 'Controller', '', get_class( $this ) ) );
-        $file = VIEWS. '/'. $controller .'/'. $action_name .'.php';
+        $file = VIEWS. '/'. $controller .'/'. $viewname .'.php';
 
         if ( !is_file( $file ) )
             throw new Exception( 'View not found !!!' );
@@ -50,7 +77,14 @@ class Controller
         }
     }
 
-    function renderSection( $name )
+    /**
+     * 
+     * Imprime le contenue d'une section en sortie standard
+     * 
+     * @param       string $name    Nom de la section
+     * 
+     */
+    function renderSection( string $name )
     {
         if ( isset( $this->section[ $name ] ) )
         {
@@ -59,7 +93,14 @@ class Controller
         }
     }
 
-    function renderPartial( $file )
+    /**
+     * 
+     * Imprime le contenue d'un fichier complémentaire en sortie standard
+     * 
+     * @param       string $file    Emplacement du fichier à inclure
+     * 
+     */
+    function renderPartial( string $file )
     {
         if ( !is_file( $file ) )
             echo 'Partial not found !!!';
@@ -68,6 +109,14 @@ class Controller
         require( $file );
     }
 
+    /**
+     * 
+     * Récupére la valeur d'un post
+     * 
+     * @param       string $name    Clef de l'array
+     * @return      string
+     * 
+     */
     function getPost( string $name )
     {
         if ( isset( $_POST[ $name ] ) )
@@ -77,6 +126,14 @@ class Controller
         return NULL;
     }
 
+    /**
+     * 
+     * Vérifie la validité de plusieurs post (Basique)
+     * 
+     * @param       array $names    Clefs de l'array
+     * @return      bool
+     * 
+     */
     function validPosts( array $names )
     {
         foreach ( $names as $name )
@@ -87,6 +144,18 @@ class Controller
         return true;
     }
 
+    /**
+     * 
+     * Vérifie la validité d'un post (Avancé)
+     * 
+     * @param       string  $name       Clef de l'array
+     * @param       string  $type       Type de donnée
+     * @param       int     $min        Taille minimum
+     * @param       int     $max        Taille maximum
+     * @param       bool    $required   Requis
+     * @return      bool
+     * 
+     */
     function validPost( string $name, string $type, int $min, int $max, bool $required )
     {
         if ( ( !isset( $_POST[ $name ] ) || empty( $_POST[ $name ] ) ) && !$required )
@@ -96,14 +165,16 @@ class Controller
         
         switch ( $type )
         {
-            case 'password':
             case 'text':
-                if ( strlen( $_POST[ $name ] ) < $min || strlen( $_POST[ $name ] ) > $max )
+            case 'password':
+                if ( strlen( $_POST[ $name ] ) < $min && $min != -1 || 
+                     strlen( $_POST[ $name ] ) > $max && $max != -1 )
                     return false;
             break;
 
             case 'number':
-                if ( $_POST[ $name ] < $min && $min != -1 || $_POST[ $name ] > $max && $max != -1 )
+                if ( $_POST[ $name ] < $min && $min != -1 || 
+                     $_POST[ $name ] > $max && $max != -1 )
                     return false;
             break;
 
@@ -121,7 +192,16 @@ class Controller
         return true;
     }
 
-    function validateDate($date, $format = 'Y-m-d')
+    /**
+     * 
+     * Vérifie la validité d'une date
+     * 
+     * @param       string  $date       Date sous forme de chaine de caractère
+     * @param       string  $format     Format de la date
+     * @return      bool
+     * 
+     */
+    function validateDate( string $date, string $format = 'Y-m-d')
     {
         $d = DateTime::createFromFormat($format, $date);
         return $d && $d->format($format) === $date;
@@ -131,10 +211,29 @@ class Controller
      * HTTP Error
      */
 
+    /** 
+     * Renvoi une erreur 400 et quitte l'execution en cours
+    */
     function invalid()          { $this->statusCode( 400, 'Invalid argument' ); }
+
+    /** 
+     * Renvoi une erreur 401 et quitte l'execution en cours
+    */
     function unauthorized()     { $this->statusCode( 401, 'Unauthorized' );     }
+
+    /** 
+     * Renvoi une erreur 404 et quitte l'execution en cours
+    */
     function not_found()        { $this->statusCode( 404, 'Not Found' );        }
 
+    /**
+     * 
+     * Renvoi un code erreur et quitte l'execution en cours
+     * 
+     * @param   int $code           Code erreur
+     * @param   string $message     Message d'erreur
+     * 
+     */
     function statusCode( int $code, string $message )
     {
         header( $_SERVER['SERVER_PROTOCOL'] .' '. $code .' '. $message );

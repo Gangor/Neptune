@@ -17,19 +17,19 @@
             </div>
         <?php } ?>
         <div class="card-body">
-            <p class="float-right">
-                <?php echo $room->capacite ?> <i class="fas fa-male"></i>                            
-            </p>
+            <p class="float-right"><?php echo $room->capacite ?> <i class="fas fa-male"></i></p>
             <p class="card-text"><a href="/room/view/<?php echo $room->numero ?>">Chambre N° <?php echo $room->numero ?></a></p>
             <div class="d-flex justify-content-between align-items-center">
-                <?php if ( Session::Loggin() && $user->admin ) { ?>
+                <?php if ( Session::Loggin() ) { ?>
                 <div class="btn-group">
                     <a href="/room/reserve/<?php echo $room->numero ?>" class="btn btn-sm btn-primary">Reserver</a>
-                    <a href="/room/edit/<?php echo $room->numero ?>" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
-                    <a href="/room/delete/<?php echo $room->numero ?>" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
+                    <?php if ( $user->admin ) { ?>                    
+                        <a href="/room/edit/<?php echo $room->numero ?>" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
+                        <a href="/room/delete/<?php echo $room->numero ?>" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
+                    <?php } ?>
                 </div>
                 <?php } ?>
-                <small class="text-muted align-right"><?php echo $room->prix ?> €</small>
+                <small class="text-muted align-right"><?php echo $room->prix ?> € / jour</small>
             </div>
         </div>
     </div>

@@ -11,6 +11,12 @@ class manageController extends Controller
         $this->users = new Users();
     }
 
+    /*
+     *
+     * GET : /manage/index
+     * Page des paramètres utilisateur
+     * 
+     */
     public function index()
     {
         if ( !$this->user )
@@ -20,6 +26,12 @@ class manageController extends Controller
         $this->render("index");
     }
 
+    /*
+     *
+     * POST : /manage/editconfirm
+     * Page de confirmation des paramètres utilisateur
+     * 
+     */
     public function editconfirm()
     {
         if ( !$this->user )
@@ -57,6 +69,12 @@ class manageController extends Controller
         $this->render("index");
     }
 
+    /*
+     *
+     * GET : /manage/editpassword
+     * Page de changement de mot de passe
+     * 
+     */
     public function editpassword()
     {            
         if ( !$this->user )
@@ -65,6 +83,11 @@ class manageController extends Controller
         $this->render("editpassword");
     }
 
+    /*
+     *
+     * POST : /manage/editpasswordConfirm
+     * Page de confirmation de changement de mot de passe
+     */ 
     public function editpasswordConfirm()
     {            
         if ( !$this->user )
@@ -98,6 +121,11 @@ class manageController extends Controller
         $this->render("editpassword");
     }
 
+    /*
+     *
+     * GET : /manage/editpassword
+     * Page de récupération des données utilisateur
+     */
     public function recoveData()
     {
         if ( !$this->user )

@@ -14,7 +14,7 @@
             <div class="mb-5"></div>
 
             <div class="text-danger"><?php echo $error; ?></div>
-            <form id="login" name="login" action="/user/loginConfirm/<?php echo $url ?>" method="post">
+            <form id="login" name="login" action="/user/loginConfirm?redirect=<?php echo $url ?>" method="post">
                 <div class="form-group">
                     <?php Form::Input( 'email', $validations['email'], 'email' ); ?>
                 </div>

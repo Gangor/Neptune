@@ -1,8 +1,12 @@
 <?php
-    $title = "Connexion";
+    $title = 'Connexion';
+    $validations = [
+        'email' => [ 'placeholder' => 'Email *', 'maxlength' => '60', 'required' ],
+        'password' => [ 'placeholder' => 'Mot de passe *', 'maxlength' => '50', 'required' ]
+    ];
 ?>
 
-<div class="parallax" style="background-image: url('../assets/images/piscine-restaurant.jpg')">
+<div class="parallax" style="background-image: url('/assets/images/piscine-restaurant.jpg')">
     <div class="row justify-content-md-center">
         <div class="col-md-4">
             <div class="mb-5"></div>
@@ -10,12 +14,12 @@
             <div class="mb-5"></div>
 
             <div class="text-danger"><?php echo $error; ?></div>
-            <form id="login" name="login" action="/user/loginConfirm?redirect=<?php echo $url ?>" method="post">
+            <form id="login" name="login" action="/user/loginConfirm/<?php echo $url ?>" method="post">
                 <div class="form-group">
-                    <?php Form::Input( "text", array( "placeholder" => "Email", "required"), "email" ) ?>
+                    <?php Form::Input( 'email', $validations['email'], 'email' ); ?>
                 </div>
                 <div class="form-group">
-                    <?php Form::Input( "password", array( "placeholder" => "Mot de passe", "required"), "password" ) ?>
+                    <?php Form::Input( 'password', $validations[ 'password' ], 'password' ) ?>
                 </div>
                 <div class="form-group text-center">
                     <button type="submit" class="btn btn-success">Confirmer</button>
@@ -25,3 +29,12 @@
         </div>
     </div>
 </div>
+
+<?php 
+$this->section[ "scripts" ] = 
+'
+    <script>
+        $("#login").validate({ lang: \'fr\' });
+    </script>
+'; 
+?>

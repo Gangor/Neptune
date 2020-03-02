@@ -6,17 +6,8 @@ class Router
     {
         $request->controller    = Router::get( $url, 1, CONTROLLER_DEF );
         $request->action        = Router::get( $url, 2, ACTION_DEF );
-        $request->params        = Router::param( $url );
-
-        for ( $i = 0; $i < sizeof( $request->params ); $i++ )
-        {
-            if ( is_bool( $request->params[ $i ] ) )
-                $request->params[ $i ] = boolval( $request->params[ $i ] );
-            elseif ( is_numeric( $request->params[ $i ] ) )
-                $request->params[ $i ] = intval( $request->params[ $i ] );
-            elseif ( is_float( $request->params[ $i ] ) )
-                $request->params[ $i ] = floatval( $request->params[ $i ] );
-        }
+        $request->id            = Router::get( $url, 3, null );
+        $request->params        = Router::param( );
     }
 
     static public function get( string $url, int $index, $default )
@@ -35,32 +26,9 @@ class Router
         return $default;
     }
 
-    static public function param( string $url )
+    static public function param( )
     {
-        $url = trim( $url );
-        $params = array();
-
-        if ( strpos( $url, '?' ) )
-        {
-            $pos = strpos( $url, '?' ) + 1;
-            $len = strlen( $url );
-            $params = explode( '&', substr( $url, $pos, $len ));
-
-            for ( $i = 0; $i < sizeof( $params ); $i++ )
-            {
-                $explodes = explode( '=', $params[$i] );
-                $params[$i] = $explodes[1];
-            }
-        }
-        else
-        {
-            $params = explode( '/', $url );
-        }
-
-        if ( sizeof( $params ) > 0 ) 
-            return array_slice( $params, 0 );
-
-        return array();
+        return array_slice( $_GET, 1 );
     }
 
     static public function redirect( string $url )

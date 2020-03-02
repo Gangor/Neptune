@@ -87,6 +87,46 @@ class Controller
         return true;
     }
 
+    function validPost( string $name, string $type, int $min, int $max, bool $required )
+    {
+        if ( ( !isset( $_POST[ $name ] ) || empty( $_POST[ $name ] ) ) && !$required )
+            return true;
+        elseif ( ( !isset( $_POST[ $name ] ) || empty( $_POST[ $name ] ) ) && $required )
+            return false;
+        
+        switch ( $type )
+        {
+            case 'password':
+            case 'text':
+                if ( strlen( $_POST[ $name ] ) < $min || strlen( $_POST[ $name ] ) > $max )
+                    return false;
+            break;
+
+            case 'number':
+                if ( $_POST[ $name ] < $min && $min != -1 || $_POST[ $name ] > $max && $max != -1 )
+                    return false;
+            break;
+
+            case 'email': 
+                if ( !filter_var( $_POST[ $name ], FILTER_VALIDATE_EMAIL )) 
+                    return false;
+            break;
+
+            case 'date':
+                if ( !$this->validateDate( $_POST[ $name ] ) )
+                    return false;
+            break;
+        } 
+
+        return true;
+    }
+
+    function validateDate($date, $format = 'Y-m-d')
+    {
+        $d = DateTime::createFromFormat($format, $date);
+        return $d && $d->format($format) === $date;
+    }
+
     /**
      * HTTP Error
      */

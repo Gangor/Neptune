@@ -1,6 +1,6 @@
 <?php 
 
-require CORE. "/database.php";
+include_once CORE. "/database.php";
 
 class Users
 {
@@ -11,29 +11,27 @@ class Users
         $this->conn = Database::GetConnection();
     }
 
-    function Create( array $user )
+    function Create( object $user )
     {
         if ( $this->conn )
         {
             $statement = $this->conn->prepare( "INSERT INTO clients (civilite, nom, prenom, adresse, codePostal, ville, pays_id, motdepasse, identifiant, cle, confirme, admin) VALUES (:civilite, :nom, :prenom, :adresse, :codePostal, :ville, :pays, :motdepasse, :identifiant, :cle, :confirme, :admin)" );
-            $statement->bindParam(':civilite', $user [ 'civilite' ] );
-            $statement->bindParam(':nom', $user [ 'nom' ] );
-            $statement->bindParam(':prenom', $user [ 'prenom' ] );
-            $statement->bindParam(':codePostal', $user [ 'codePostal' ]);
-            $statement->bindParam(':adresse', $user [ 'adresse' ] );
-            $statement->bindParam(':ville', $user [ 'ville' ] );
-            $statement->bindParam(':pays', $user [ 'pays' ] );
-            $statement->bindParam(':identifiant', $user [ 'identifiant' ] );
-            $statement->bindParam(':motdepasse', $user [ 'motdepasse' ] );
-            $statement->bindParam(':cle', $user [ 'cle' ] );
-            $statement->bindParam(':confirme', $user [ 'confirme' ] );
-            $statement->bindParam(':admin', $user [ 'admin' ] );
+            $statement->bindParam(':civilite', $user->civilite );
+            $statement->bindParam(':nom', $user->nom );
+            $statement->bindParam(':prenom', $user->prenom );
+            $statement->bindParam(':codePostal', $user->codePostal );
+            $statement->bindParam(':adresse', $user->adresse );
+            $statement->bindParam(':ville', $user->ville );
+            $statement->bindParam(':pays_id', $user->pays_id );
+            $statement->bindParam(':identifiant', $user->identifiant );
+            $statement->bindParam(':motdepasse', $user->motdepasse );
+            $statement->bindParam(':cle', $user->cle );
+            $statement->bindParam(':confirme', $user->confirme );
+            $statement->bindParam(':admin', $user->admin );
             $statement->execute();
             
             return $this->conn->lastInsertId();
         }
-        
-        return 0;
     }
 
     function Delete( int $id )
@@ -97,26 +95,27 @@ class Users
         }
     }
 
-    function Update( array $user )
+    function Update( object $user )
     {
         if ( $this->conn )
         {
-            $statement = $this->conn->prepare( "UPDATE clients SET civilite = :civilite, nom = :nom, prenom = :prenom, adresse = :adresse, codePostal = :codePostal, ville = :ville, pays_id = :pays_id, motdepasse = :motdepasse, identifiant = :identifiant, cle = :cle" );            
-            $statement->bindParam(':civilite', $user [ 'civilite' ] );
-            $statement->bindParam(':nom', $user [ 'nom' ] );
-            $statement->bindParam(':prenom', $user [ 'prenom' ] );
-            $statement->bindParam(':codePostal', $user [ 'codePostal' ]);
-            $statement->bindParam(':adresse', $user [ 'adresse' ] );
-            $statement->bindParam(':ville', $user [ 'ville' ] );
-            $statement->bindParam(':pays', $user [ 'pays' ] );
-            $statement->bindParam(':identifiant', $user [ 'identifiant' ] );
-            $statement->bindParam(':motdepasse', $user [ 'motdepasse' ] );
-            $statement->bindParam(':cle', $user [ 'cle' ] );
+            $statement = $this->conn->prepare( "UPDATE clients SET civilite = :civilite, nom = :nom, prenom = :prenom, adresse = :adresse, codePostal = :codePostal, ville = :ville, pays_id = :pays_id, motdepasse = :motdepasse, identifiant = :identifiant, cle = :cle, confirme = :confirme, admin = :admin WHERE id = :id_client" );            
+            $statement->bindParam(':civilite', $user->civilite );
+            $statement->bindParam(':nom', $user->nom );
+            $statement->bindParam(':prenom', $user->prenom );
+            $statement->bindParam(':codePostal', $user->codePostal );
+            $statement->bindParam(':adresse', $user->adresse );
+            $statement->bindParam(':ville', $user->ville );
+            $statement->bindParam(':pays_id', $user->pays_id );
+            $statement->bindParam(':identifiant', $user->identifiant );
+            $statement->bindParam(':motdepasse', $user->motdepasse );
+            $statement->bindParam(':cle', $user->cle );
+            $statement->bindParam(':confirme', $user->confirme );
+            $statement->bindParam(':admin', $user->admin );
+            $statement->bindParam(':id_client', $user->id );
             
             return $statement->execute();
         }
-        
-        return 0;
     }
 }
 

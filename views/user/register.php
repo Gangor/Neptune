@@ -1,8 +1,22 @@
 <?php
     $title = "Inscription";
+    $civilites = [
+        [ 'value' => 'Monsieur' ],
+        [ 'value' => 'Mademoiselle' ],
+        [ 'value' => 'Madame' ],
+    ];
+    $validations = [
+        'email' => [ 'placeholder' => 'Email *', 'maxlength' => '60', 'required' ],
+        'password' => [ 'placeholder' => 'Mot de passe *', 'maxlength' => '50', 'required' ],
+        'civilite' => [ 'required' ],
+        'firstname' => [ 'placeholder' => 'Prénom *', 'maxlength' => '70', 'required' ],
+        'lastname' => [ 'placeholder' => 'Nom *', 'maxlength' => '100', 'required' ],
+        'adresse' => [ 'placeholder' => 'Adresse', 'maxlength' => '200' ],
+        'ville' => [ 'placeholder' => 'Ville', 'maxlength' => '200' ],
+        'codepostal' => [ 'placeholder' => "Code postal", 'minlength' => '5', 'maxlength' => '5' ],
+        'pays' => [],
+    ];
 ?>
-
-<div class="mt-5"></div>
 
 <div class="container">
     <div class="row justify-content-md-center">
@@ -15,40 +29,35 @@
 
                 <h5 class="text-center">Information de connexion</h5>
                 <div class="form-group">
-                    <?php Form::Input( "text", array( "placeholder" => "Email", "required" ), "email" ) ?>
+                    <?php Form::Input( 'email', $validations[ 'email' ], 'email' ) ?>
                 </div>
                 <div class="form-group">
-                    <?php Form::Input( "password", array( "placeholder" => "Mot de passe", "required" ), "password" ) ?>
+                    <?php Form::Input( 'password', $validations[ 'password' ], 'password' ) ?>
                 </div>
                 <div class="mb-3"></div>
 
                 <h5 class="text-center">Information personnelle</h5>
 
                 <div class="form-group">
-                    <select id="civilite" name="civilite" class="form-control">
-                        <option value="Monsieur">Monsieur</option>
-                        <option value="Mademoiselle">Mademoiselle</option>
-                        <option value="Madame">Madame</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <?php Form::Select( array( "required" ), "pays", $pays, array( "id", "nom" ) ) ?>
+                    <?php Form::Select( 'civilite', $validations[ 'civilite' ], $civilites, array( 'value', 'value' ) ) ?>
                 </div>
                 <div class="form-group">
-                    <?php Form::Input( "text", array( "placeholder" => "Prénom", "required" ), "firstname" ) ?>
+                    <?php Form::Select( 'pays', $validations[ 'pays' ], $pays, array( 'id', 'nom' ) ) ?>
                 </div>
                 <div class="form-group">
-                    <?php Form::Input( "text", array( "placeholder" => "Nom", "required" ), "lastname" ) ?>
+                    <?php Form::Input( 'text', $validations[ 'firstname' ], 'firstname' ) ?>
                 </div>
                 <div class="form-group">
-                    <?php Form::Input( "text", array( "placeholder" => "Adresse", "required" ), "adresse" ) ?>
+                    <?php Form::Input( 'text', $validations[ 'lastname' ], 'lastname' ) ?>
                 </div>
                 <div class="form-group">
-                    <?php Form::Input( "text", array( "placeholder" => "Ville", "required" ), "ville" ) ?>
+                    <?php Form::Input( 'text', $validations[ 'adresse' ], 'adresse' ) ?>
                 </div>
                 <div class="form-group">
-                    <?php Form::Input( "text", array( "placeholder" => "Code postal", "required" ), "codepostal" ) ?>
+                    <?php Form::Input( 'text', $validations[ 'ville' ], 'ville' ) ?>
+                </div>
+                <div class="form-group">
+                    <?php Form::Input( 'text', $validations[ 'codepostal' ], 'codepostal' ) ?>
                 </div>
 
                 <div class="form-group text-center">
@@ -61,3 +70,12 @@
 </div>
 
 <div class="mb-5"></div>
+
+<?php 
+$this->section[ "scripts" ] = 
+'
+    <script>
+        $("#register").validate({ lang: \'fr\' });
+    </script>
+'; 
+?>

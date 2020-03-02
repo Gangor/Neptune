@@ -30,7 +30,16 @@ class Dispatcher
             else
             {
                 call_user_func_array( [ $controller, 'parent::__construct' ], array() );
-                call_user_func_array( [ $controller, $this->request->action ], $this->request->params );
+                
+                $params = [];
+
+                if ( $this->request->id )
+                    $params[] =  $this->request->id;
+
+                if ( $this->request->params )
+                    $params[] = $this->request->params;
+                
+                call_user_func_array( [ $controller, $this->request->action ], $params );
             }
         }
         catch (ArgumentCountError $ex)

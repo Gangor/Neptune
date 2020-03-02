@@ -6,6 +6,13 @@ nav {
     background-color: rgba(255, 255, 255, .15);
 }
 
+.navbar-brand {
+    position: absolute;
+    left: 50%;
+    margin-left: -50px !important;
+    display: block;
+}
+
 #home-background {
     background-image: url('../images/piscine-restaurant.jpg');
     height: 500px;
@@ -17,4 +24,18 @@ nav {
     left: 50%;
     margin-left: -50vw;
     height: calc(100vh - 36px);
- }
+}
+
+.card-icon {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    padding: 5px;
+    padding-left: 7px;
+    padding-right: 7px;
+    color: rgb(73, 96, 104);
+    background-color: white;
+    border-radius: 50%;
+    border-color: white;
+    border-width: 1px;
+}

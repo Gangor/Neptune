@@ -14,18 +14,19 @@ class userController extends Controller
     /*
      * GET : /user/login
      */
-    public function login( string $url = "" )
+    public function login( string $redirect = "" )
     {
-        $this->view["url"] = $url;
+        $this->view["url"] = $redirect;
         $this->render("login");
     }
 
     /*
      * POST : /user/login
      */
-    public function loginconfirm( string $url = "" )
+    public function loginconfirm( string $redirect = "" )
     {
-        if ( $this->validPosts( array( 'email', 'password' ) ) )
+        if ( $this->validPost( 'email', 'email', -1, 60, true ) &&
+             $this->validPost( 'password', 'password', -1, 50, true ) )
         {
             $email      = $this->getPost( "email" );
             $user       = $this->users->GetUserByEmail( $email );
@@ -38,14 +39,14 @@ class userController extends Controller
                 if ( sha1( $password ) == $user->motdepasse )
                 {
                     Session::set( 'userId', $user->id );
-                    Router::redirect( $url );
+                    Router::redirect( $redirect );
                 }
                 else $this->view["error"] = "Identifiant ou mot de passe incorrect.";
             }
         }
-        else $this->view["error"] = "Un ou plusieurs champs manquant.";
+        else $this->view["error"] = "Un ou plusieurs champs ne sont pas correctement remplis.";
 
-        $this->view["url"] = $url;
+        $this->view["url"] = $redirect;
         $this->render("login");
     }
 
@@ -54,11 +55,11 @@ class userController extends Controller
      */
     public function logout()
     {
-        if ( $this->user )
-        {
-            Session::destroy();
-            Router::redirect( '' );
-        }
+        if ( !$this->user )
+            $this->unauthorized();
+            
+        Session::destroy();
+        Router::redirect( '' );
     }
 
     /*
@@ -75,7 +76,15 @@ class userController extends Controller
      */
     public function registerconfirm()
     {
-        if ( $this->validPosts( array( 'email', 'password', 'civilite', 'pays', 'firstname', 'lastname', 'adresse', 'ville', 'codepostal' ) ) )
+        if ( $this->validPost( 'email', 'email', -1, 60, true ) &&
+             $this->validPost( 'password', 'password', -1, 50, true ) &&
+             $this->validPost( 'civilite', 'text', -1, 20, true ) &&
+             $this->validPost( 'firstname', 'text', -1, 70, true ) &&
+             $this->validPost( 'lastname', 'text', -1, 100, true ) &&
+             $this->validPost( 'pays', 'number', -1, -1, false ) &&
+             $this->validPost( 'adresse', 'text', -1, 200, false ) &&
+             $this->validPost( 'ville', 'text', -1, 200, false ) &&
+             $this->validPost( 'codepostal', 'text', 5, 5, false ) )
         {
             $email = $this->getPost( "email" );
 
@@ -97,7 +106,7 @@ class userController extends Controller
                     'admin'         => null
                 );
                 
-                if ( $this->users->Create( $newUser ) )
+                if ( $this->users->Create( (object)$newUser ) )
                 {
                     Router::redirectLocal( 'user', 'login' );
                 }
@@ -105,20 +114,10 @@ class userController extends Controller
             }
             else $this->view["error"] = "Cette adresse mail est déjà utilisé.";
         }
-        else $this->view["error"] = "Un ou plusieurs champs manquant.";
+        else $this->view["error"] = "Un ou plusieurs champs ne sont pas correctement remplis.";
 
         $this->view["pays"] = $this->users->GetPays();
         $this->render("register");
-    }
-
-    public function manage()
-    {
-        if ( $this->user )
-        {
-            
-        }
-
-        $this->unauthorized();
     }
 }
 

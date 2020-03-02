@@ -5,6 +5,7 @@
   "license": "MIT",
   "dependencies": {
     "bootstrap": "latest",
-    "jquery":"latest"
+    "jquery":"latest",
+    "jquery-validation":"latest"
   }
 }

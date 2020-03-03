@@ -119,7 +119,7 @@ class userController extends Controller
                 $newUser->codePostal    = $model->CodePostal;
                 $newUser->adresse       = $model->Adresse;
                 $newUser->ville         = $model->Ville;
-                $newUser->pays_id       = $model->Pays;
+                $newUser->pays_id       = (int)$model->Pays;
                 $newUser->identifiant   = $model->Email;
                 $newUser->motdepasse    = sha1( $model->Password );
                 $newUser->cle           = uniqid();

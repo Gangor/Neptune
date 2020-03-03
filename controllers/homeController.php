@@ -20,8 +20,7 @@ class homeController extends Controller
      */
     public function index()
     {
-        $this->view[ 'rooms' ] = $this->rooms->GetPolularRooms();
-        $this->render( 'index' );
+        $this->render( 'index', $this->rooms->GetPolularRooms() );
     }
 }
 

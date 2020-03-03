@@ -47,11 +47,11 @@ class Controller
      * Démarre le rendu de la page
      * 
      * @param       string $viewname    Nom du fichier de la vue
-     * @param       string $model       Modèle de la vue
+     * @param       var $model          Modèle de la vue
      * @param       string $layout      Habillage de la page
      * 
      */
-    public function render( string $viewname, object $model = null, string $layout = "default")
+    public function render( string $viewname, $models = null, string $layout = "default")
     {
         extract( $this->view );
 
@@ -99,9 +99,10 @@ class Controller
      * Imprime le contenue d'un fichier complémentaire en sortie standard
      * 
      * @param       string $file    Emplacement du fichier à inclure
+     * @param       var $model      Modèle de la vue
      * 
      */
-    function renderPartial( string $file, object $model = null )
+    function renderPartial( string $file, $models = null )
     {
         if ( !is_file( $file ) )
             echo 'Partial not found !!!';

@@ -115,6 +115,19 @@ class EditModel extends Model
         ]
     );
 
+    public $civilites = [ 'Monsieur', 'Mademoiselle', 'Madame' ];
+
+    function customCiviliteValidation( array $field, $value )
+    {
+        if ( !in_array( $value, $this->civilites ) )
+        {
+            $this->Validations[ $field[ 'id' ] ][ 'Error' ] = "Cette civilité n'est pas valide.";
+            return false;
+        }
+
+        return true;
+    }
+
     public function Parse( object $user )
     {
         $this->Civilite = $user->civilite;

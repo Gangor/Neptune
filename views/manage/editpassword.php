@@ -18,13 +18,13 @@
                 <?php } ?>
 
                 <div class="form-group">
-                    <?php Form::Input( $model->Validations[ 'OldPassword' ], $model->OldPassword ) ?>
+                    <?php Form::Input( $models->Validations[ 'OldPassword' ], $models->OldPassword ) ?>
                 </div>
                 <div class="form-group">
-                    <?php Form::Input( $model->Validations[ 'NewPassword' ], $model->NewPassword ) ?>
+                    <?php Form::Input( $models->Validations[ 'NewPassword' ], $models->NewPassword ) ?>
                 </div>
                 <div class="form-group">
-                    <?php Form::Input( $model->Validations[ 'Confirm' ], $model->Confirm ) ?>
+                    <?php Form::Input( $models->Validations[ 'Confirm' ], $models->Confirm ) ?>
                 </div>
 
                 <div class="form-group text-center">
@@ -38,11 +38,4 @@
 
 <div class="mb-5"></div>
 
-<?php 
-$this->section[ "scripts" ] = 
-'
-    <script>
-        $("#changepassword").validate({ lang: \'fr\' });
-    </script>
-'; 
-?>
+<?php $this->renderPartial( VIEWS. '/shared/validationScript.php', 'changepassword' ); ?>

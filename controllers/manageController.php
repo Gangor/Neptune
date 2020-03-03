@@ -16,11 +16,11 @@ class manageController extends Controller
 
     /*
      *
-     * GET : /manage/index
+     * GET : /manage/edit
      * Page des paramètres utilisateur
      * 
      */
-    public function index()
+    public function edit()
     {
         if ( !$this->user )
             $this->unauthorized();
@@ -29,7 +29,7 @@ class manageController extends Controller
         $model->Parse( $this->user );
 
         $this->view[ 'pays' ] = $this->users->GetPays();
-        $this->render( 'index', $model );
+        $this->render( 'edit', $model );
     }
 
     /*

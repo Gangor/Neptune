@@ -28,8 +28,7 @@ class Rooms
     {
         if ( $this->conn )
         {
-            $statement = $this->conn->prepare( "INSERT INTO chambres (numero, capacite, exposition, douche, etage, tarif_id) VALUES (:numero, :capacite, :exposition, :douche, :etage, :tarif_id)" );            
-            $statement->bindParam(':numero', $chambre->numero );
+            $statement = $this->conn->prepare( "INSERT INTO chambres (capacite, exposition, douche, etage, tarif_id) VALUES (:capacite, :exposition, :douche, :etage, :tarif_id)" );            
             $statement->bindParam(':capacite', $chambre->capacite );
             $statement->bindParam(':exposition', $chambre->exposition );
             $statement->bindParam(':douche', $chambre->douche );
@@ -62,6 +61,30 @@ class Rooms
 
     /**
      * 
+     * Récupère un tarif par sont id en base de donnée
+     * 
+     * @return object
+     * 
+     */
+    function GetTarif( int $id )
+    {
+        if ( $this->conn )
+        {
+            $statement = $this->conn->prepare( 'SELECT * FROM tarifs WHERE id = :id' );
+            $statement->bindParam(':id', $id );
+
+            if ( $statement->execute() )
+            {
+                $tarif = $statement->fetch( PDO::FETCH_OBJ );
+                $statement->closeCursor();
+
+                return $tarif;
+            }
+        }
+    }
+
+    /**
+     * 
      * Récupère la liste des tarifs en base de donnée
      * 
      * @return object[]
@@ -89,7 +112,7 @@ class Rooms
      * 
      * @param   string $column  Colonne à filtrer
      * @param   string $filter  Valeur de la colonne
-     * @return  object[]
+     * @return  object
      * 
      */
     function GetRooms( string $column = 'numero', string $filter = '%%' )

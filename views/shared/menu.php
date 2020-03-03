@@ -34,7 +34,7 @@
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown">Mon compte<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li class="nav-item">
-                            <a class="nav-link" href="/manage">Paramètres</a>
+                            <a class="nav-link" href="/manage/edit">Paramètres</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/user/logout">Déconnexion</a>

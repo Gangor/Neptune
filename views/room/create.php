@@ -1,5 +1,5 @@
 <?php
-    $title = 'Editer une chambre';
+    $title = 'Ajouter une chambre';
 ?>
 
 <div class="mt-5"></div>
@@ -8,17 +8,9 @@
     <div class="mt-5"></div>
     <div class="row justify-content-md-center">
         <div class="col-md-6">
-            <form id="edit" name="edit" action="/room/editConfirm/<?php echo $room->numero ?>" method="post">
+            <form id="create" name="create" action="/room/createConfirm" method="post">
                 <div class="text-danger"><?php echo $error; ?></div>
-
-                <?php if ( isset( $success ) ) { ?>
-                    <p class="text-center text-success">La chambre a été mise à jour avec succès.</p>
-                <?php } ?>
-
-                <div class="form-group">
-                    <label for="Numero" class="label-control">Numero *</label>
-                    <?php Form::Input( $models->Validations[ 'Numero' ], $models->Numero ) ?>
-                </div>
+            
                 <div class="form-group">
                     <label for="Capacite" class="label-control">Capacité *</label>
                     <?php Form::Input( $models->Validations[ 'Capacite' ], $models->Capacite ) ?>
@@ -49,4 +41,4 @@
 </div>
 <div class="mt-5"></div>
 
-<?php $this->renderPartial( VIEWS. '/shared/validationScript.php', 'edit' ); ?>
+<?php $this->renderPartial( VIEWS. '/shared/validationScript.php', 'create' ); ?>

@@ -18,14 +18,22 @@ class Model
     {
         foreach ( $this->Validations as $Validation )
         {
+            $property   = $Validation[ 'name' ];
+            $value      = $this->getPost( $Validation );
+
+            $this->Validations[ $Validation[ 'id' ] ][ 'Error' ] = '';
+
             if ( !$ignore )
             {
-                if ( !$this->validField( $Validation ) )
+                $custom = 'custom'.$property.'Validation';
+
+                if ( !$this->validField( $Validation, $value ) )
                     $this->IsValid = false;
+                
+                if ( method_exists( $this, $custom ))
+                    if ( !call_user_func_array( [ $this, $custom ], array( $Validation, $value ) ) )
+                        $this->IsValid = false;
             }
-            
-            $property = $Validation[ 'name' ];
-            $value = $this->getPost( $Validation );
 
             $this->$property = $value;
         }
@@ -61,9 +69,10 @@ class Model
      * Vérifie la validité des champs
      * 
      * @param string  $fields       Attribut du champs
+     * @param var  $value           Vakye du champs
      * 
      */
-    private function validField( array $fields )
+    private function validField( array $fields, $value )
     {
         $min        = $fields[ 'min' ] ?? null;
         $minlength  = $fields[ 'minlength' ] ?? null;
@@ -71,10 +80,6 @@ class Model
         $maxlength  = $fields[ 'maxlength' ] ?? null;
         $type       = $fields[ 'type' ] ?? null;
         $require    = array_key_exists( 'required', $fields );
-        $value      = null;
-
-        if ( isset( $_POST[ $fields[ 'id' ] ] ) )
-            $value = $_POST[ $fields[ 'id' ] ];
 
         if ( $type != null && $require )
         {

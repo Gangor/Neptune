@@ -3,6 +3,7 @@
 require CORE. "/controller.php";
 require CORE. "/rooms.php";
 
+require MODELS. "/room/createModel.php";
 require MODELS. "/room/editModel.php";
 
 class roomController extends Controller
@@ -22,8 +23,67 @@ class roomController extends Controller
      */
     public function index()
     {
-        $this->view[ 'rooms' ] = $this->rooms->GetRooms();
-        $this->render( 'index' );
+        $this->render( 'index', $this->rooms->GetRooms() );
+    }
+
+    /**
+     * 
+     * GET : /room/create
+     * Page de création de chambre
+     * 
+     */
+    public function create()
+    {
+        if ( !$this->user || !$this->user->admin )
+            $this->unauthorized();
+        
+        $model = new createModel( true );
+        $this->view[ 'tarifs' ] = $this->rooms->GetTarifs();
+
+        $this->render( 'create', $model );
+    }
+
+    /**
+     * 
+     * GET : /room/createConfirm
+     * Page de confirmation création de chambre
+     * 
+     */
+    public function createConfirm()
+    {
+        if ( !$this->user || !$this->user->admin )
+            $this->unauthorized();
+        
+        $model = new createModel();
+
+        if ( $model->IsValid )
+        {
+            $tarif = $this->rooms->GetTarif( $model->Tarif );
+
+            if ( $tarif )
+            {
+                $room = new stdClass();
+
+                $room->capacite     = (int)$model->Capacite;
+                $room->exposition   = $model->Exposition;
+                $room->douche       = (int)$model->Douche;
+                $room->etage        = (int)$model->Etage;
+                $room->tarif_id     = (int)$model->Tarif;
+                
+                var_dump( $room );
+
+                if ( $this->rooms->Create( $room ) )
+                {
+                    Router::redirectLocal( 'room', 'index' );
+                }
+                else $this->view["error"] = "Une erreur ses produite lors de l'ajout d'une chambre.";
+            }
+            else $this->view["error"] = "Le champs tarif est invalide.";
+        }
+        else $this->view["error"] = "Un ou plusieurs champs ne sont pas correctement remplis.";
+
+        $this->view[ 'tarifs' ] = $this->rooms->GetTarifs();
+        $this->render( 'create', $model );
     }
 
     /**
@@ -44,7 +104,7 @@ class roomController extends Controller
         if ( $room == null )
             $this->not_found();
 
-        $model = new editModel( true );
+        $model = new EditModel( true );
         $model->Parse( $room );
 
         $this->view[ 'room' ]   = $room;
@@ -71,21 +131,27 @@ class roomController extends Controller
         if ( $room == null )
             $this->not_found();
 
-        $model = new editModel( false );
+        $model = new EditModel( false );
 
         if ( $model->IsValid )
         {
-            $room->capacite     = intval( $model->Capacite );
-            $room->exposition   = $model->Exposition;
-            $room->douche       = boolval( $model->Douche );
-            $room->etage        = intval( $model->Etage );
-            $room->tarif_id     = intval( $model->Tarif );
+            $tarif = $this->rooms->GetTarif( $model->Tarif );
 
-            if ( $this->rooms->Update( $room ) )
+            if ( $tarif )
             {
-                $this->view[ "success" ] = true;
+                $room->capacite     = (int)$model->Capacite;
+                $room->exposition   = $model->Exposition;
+                $room->douche       = (bool)$model->Douche;
+                $room->etage        = (int)$model->Etage;
+                $room->tarif_id     = (int)$model->Tarif;
+
+                if ( $this->rooms->Update( $room ) )
+                {
+                    $this->view[ "success" ] = true;
+                }
+                else $this->view["error"] = "Une erreur ses produite lors de l'édition de la chambre.";
             }
-            else $this->view["error"] = "Une erreur ses produite lors de l'édition de la chambre.";
+            else $this->view["error"] = "Le champs tarif est invalide.";
         }
         else $this->view["error"] = "Un ou plusieurs champs ne sont pas correctement remplis.";
 

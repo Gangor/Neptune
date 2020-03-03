@@ -12,7 +12,7 @@
     <div class="mt-5"></div>
     <div class="row">
         <?php 
-            foreach( $rooms as $room )
+            foreach( $models as $room )
                 $this->renderPartial( VIEWS. '/room/_room.php', $room );
         ?>
     </div>

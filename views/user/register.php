@@ -1,10 +1,5 @@
 <?php
     $title = "Inscription";
-    $civilites = [
-        [ 'value' => 'Monsieur' ],
-        [ 'value' => 'Mademoiselle' ],
-        [ 'value' => 'Madame' ],
-    ];
 ?>
 
 <div class="container">
@@ -14,39 +9,43 @@
             <h2 class="text-center"><?php echo $title ?></h2>
             <div class="mb-5"></div>
             <form id="register" name="register" action="/user/registerConfirm" method="post">
-                <div class="text-danger"><?php echo $error; ?></div>
+                <div class="text-center text-danger">
+                    <div class="mb-3"></div>
+                    <?php echo $error; ?>
+                    <div class="mb-3"></div>
+                </div>
 
                 <h5 class="text-center">Information de connexion</h5>
                 <div class="form-group">
-                    <?php Form::Input( $model->Validations[ 'Email' ], $model->Email ) ?>
+                    <?php Form::Input( $models->Validations[ 'Email' ], $models->Email ) ?>
                 </div>
                 <div class="form-group">
-                    <?php Form::Input( $model->Validations[ 'Password' ], $model->Password ) ?>
+                    <?php Form::Input( $models->Validations[ 'Password' ], $models->Password ) ?>
                 </div>
                 <div class="mb-3"></div>
 
                 <h5 class="text-center">Information personnelle</h5>
 
                 <div class="form-group">
-                    <?php Form::Select( $model->Validations[ 'Civilite' ], $civilites, array( 'value', 'value' ), $model->Civilite ) ?>
+                    <?php Form::Select( $models->Validations[ 'Civilite' ], $models->civilites, null, $models->Civilite ) ?>
                 </div>
                 <div class="form-group">
-                    <?php Form::Select( $model->Validations[ 'Pays' ], $pays, array( 'id', 'nom' ), $model->Pays ) ?>
+                    <?php Form::Select( $models->Validations[ 'Pays' ], $pays, array( 'id', 'nom' ), $models->Pays ) ?>
                 </div>
                 <div class="form-group">
-                    <?php Form::Input( $model->Validations[ 'Prenom' ], $model->Prenom ) ?>
+                    <?php Form::Input( $models->Validations[ 'Prenom' ], $models->Prenom ) ?>
                 </div>
                 <div class="form-group">
-                    <?php Form::Input( $model->Validations[ 'Nom' ], $model->Nom ) ?>
+                    <?php Form::Input( $models->Validations[ 'Nom' ], $models->Nom ) ?>
                 </div>
                 <div class="form-group">
-                    <?php Form::Input( $model->Validations[ 'Adresse' ], $model->Adresse ) ?>
+                    <?php Form::Input( $models->Validations[ 'Adresse' ], $models->Adresse ) ?>
                 </div>
                 <div class="form-group">
-                    <?php Form::Input( $model->Validations[ 'Ville' ], $model->Ville ) ?>
+                    <?php Form::Input( $models->Validations[ 'Ville' ], $models->Ville ) ?>
                 </div>
                 <div class="form-group">
-                    <?php Form::Input( $model->Validations[ 'CodePostal' ], $model->CodePostal ) ?>
+                    <?php Form::Input( $models->Validations[ 'CodePostal' ], $models->CodePostal ) ?>
                 </div>
 
                 <div class="form-group text-center">
@@ -60,11 +59,4 @@
 
 <div class="mb-5"></div>
 
-<?php 
-$this->section[ "scripts" ] = 
-'
-    <script>
-        $("#register").validate({ lang: \'fr\' });
-    </script>
-'; 
-?>
+<?php $this->renderPartial( VIEWS. '/shared/validationScript.php', 'register' ); ?>

@@ -9,13 +9,18 @@
             <h2 class="text-center"><?php echo $title ?></h2>
             <div class="mb-5"></div>
 
-            <div class="text-danger"><?php echo $error; ?></div>
             <form id="login" name="login" action="/user/loginConfirm?redirect=<?php echo $url ?>" method="post">
+                <div class="text-center text-danger">
+                    <div class="mb-3"></div>
+                    <?php echo $error; ?>
+                    <div class="mb-3"></div>
+                </div>
+                
                 <div class="form-group">
-                    <?php Form::Input( $model->Validations['Email'], $model->Email ); ?>
+                    <?php Form::Input( $models->Validations[ 'Email' ], $models->Email ); ?>
                 </div>
                 <div class="form-group">
-                    <?php Form::Input( $model->Validations[ 'Password' ], $model->Password ) ?>
+                    <?php Form::Input( $models->Validations[ 'Password' ], $models->Password ) ?>
                 </div>
                 <div class="form-group text-center">
                     <button type="submit" class="btn btn-success">Confirmer</button>
@@ -26,11 +31,4 @@
     </div>
 </div>
 
-<?php 
-$this->section[ "scripts" ] = 
-'
-    <script>
-        $("#login").validate({ lang: \'fr\' });
-    </script>
-'; 
-?>
+<?php $this->renderPartial( VIEWS. '/shared/validationScript.php', 'login' ); ?>

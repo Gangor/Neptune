@@ -26,7 +26,7 @@ class userController extends Controller
     {
         $model = new LoginModel( true );
 
-        $this->view[ 'url' ]    = $redirect;
+        $this->view[ 'url' ] = $redirect;
         $this->render( 'login', $model );
     }
 
@@ -46,21 +46,24 @@ class userController extends Controller
         {
             $user = $this->users->GetUserByEmail( $model->Email );
 
-            if ( $user == null)          $this->view[ 'error' ] = 'Identifiant ou mot de passe incorrect.';
-            else if ( !$user->confirme ) $this->view[ 'error' ] = 'Ce compte n\'a pas été activé.';            
-            else
+            if ( $user != null)
             {
                 if ( $user->motdepasse == sha1( $model->Password ) )
                 {
-                    Session::set( 'userId', $user->id );
-                    Router::redirect( $redirect );
+                    if ( $user->confirme )
+                    {
+                        Session::set( 'userId', $user->id );
+                        Router::redirect( $redirect );
+                    }
+                    else $this->view[ 'error' ] = 'Ce compte n\'a pas été activé.';
                 }
                 else $this->view[ 'error' ] = 'Identifiant ou mot de passe incorrect.';
             }
+            else $this->view[ 'error' ] = 'Identifiant ou mot de passe incorrect.';
         }
         else $this->view[ 'error' ] = 'Un ou plusieurs champs ne sont pas correctement remplis.';
 
-        $this->view[ 'url' ]    = $redirect;        
+        $this->view[ 'url' ] = $redirect;        
         $this->render( 'login', $model );
     }
 
@@ -89,7 +92,7 @@ class userController extends Controller
     {
         $model = new registerModel( true );
         
-        $this->view[ 'pays' ]   = $this->users->GetPays();
+        $this->view[ 'pays' ] = $this->users->GetPays();
         $this->render( 'register', $model );
     }
 
@@ -133,7 +136,7 @@ class userController extends Controller
         }
         else $this->view[ 'error' ] = 'Un ou plusieurs champs ne sont pas correctement remplis.';
 
-        $this->view[ 'pays' ]   = $this->users->GetPays();
+        $this->view[ 'pays' ] = $this->users->GetPays();
         $this->render( 'register', $model );
     }
 }

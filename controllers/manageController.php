@@ -28,8 +28,7 @@ class manageController extends Controller
         $model = new EditModel( true );
         $model->Parse( $this->user );
 
-        $this->view[ 'pays' ]   = $this->users->GetPays();
-
+        $this->view[ 'pays' ] = $this->users->GetPays();
         $this->render( 'index', $model );
     }
 
@@ -68,8 +67,7 @@ class manageController extends Controller
         }
         else $this->view[ 'error' ] = 'Un ou plusieurs champs ne sont pas correctement remplis.';
 
-        $this->view[ 'pays' ]   = $this->users->GetPays();
-
+        $this->view[ 'pays' ] = $this->users->GetPays();
         $this->render( 'index', $model );
     }
 

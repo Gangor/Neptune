@@ -112,6 +112,31 @@ class Rooms
 
     /**
      * 
+     * Récupère la liste des chambres populaire
+     * 
+     * @param int $limit    Nombre de chambre
+     * @return  object[]
+     * 
+     */
+    function GetPolularRooms( int $limit = 6 )
+    {
+        if ( $this->conn )
+        {
+            $statement = $this->conn->prepare( 'SELECT * FROM planning INNER JOIN chambres ON chambre_id = numero LEFT JOIN tarifs ON tarif_id = id GROUP BY chambre_id ORDER BY count(*) DESC limit :limit' );
+            $statement->bindParam(':limit', $limit, PDO::PARAM_INT );
+
+            if ( $statement->execute() )
+            {
+                $tarifs = $statement->fetchAll( PDO::FETCH_OBJ );
+                $statement->closeCursor();
+
+                return $tarifs;
+            }
+        }
+    }
+
+    /**
+     * 
      * Récupère une chambre à partir sont ID en base de donnée
      * 
      * @param   int $id    Numero de la chambre

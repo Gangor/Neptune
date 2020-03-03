@@ -53,8 +53,6 @@ class Controller
      */
     public function render( string $viewname, object $model = null, string $layout = "default")
     {
-        $this->view[ 'model' ] = $model;
-
         extract( $this->view );
 
         ob_start();
@@ -103,7 +101,7 @@ class Controller
      * @param       string $file    Emplacement du fichier à inclure
      * 
      */
-    function renderPartial( string $file )
+    function renderPartial( string $file, object $model = null )
     {
         if ( !is_file( $file ) )
             echo 'Partial not found !!!';

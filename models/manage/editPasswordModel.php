@@ -53,6 +53,7 @@ class editPasswordModel extends Model
             'name'          => 'Confirm',
             'maxlength'     => '50', 
             'placeholder'   => 'Confirmation *', 
+            'equalTo'       => '#NewPassword',
             'class'         => 'form-control', 
             'required'      => ''
         ]

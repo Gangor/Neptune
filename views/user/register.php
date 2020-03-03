@@ -61,4 +61,10 @@
 <div class="mb-5"></div>
 
 <?php 
+$this->section[ "scripts" ] = 
+'
+    <script>
+        $("#register").validate({ lang: \'fr\' });
+    </script>
+'; 
 ?>

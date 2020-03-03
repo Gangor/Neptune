@@ -9,10 +9,7 @@
     <div class="row">
         <?php 
             foreach( $rooms as $room )
-            {
-                $this->view[ 'room' ] = $room;
-                $this->renderPartial( VIEWS. '/room/_room.php' );
-            }
+                $this->renderPartial( VIEWS. '/room/_room.php', $room );
         ?>
     </div>
 </div>

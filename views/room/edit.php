@@ -48,3 +48,12 @@
     </div>
 </div>
 <div class="mt-5"></div>
+
+<?php 
+$this->section[ "scripts" ] = 
+'
+    <script>
+        $("#edit").validate({ lang: \'fr\' });
+    </script>
+'; 
+?>

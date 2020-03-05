@@ -2,13 +2,17 @@
     $title = "Accueil";
 ?>
 
-<div id="home-background" class="col-md-12">
-    <div class="container">Accueil</div>
+<div id="home-background">
+    <div class="container">
+        <div class="col-md-12 center-block">
+            <h2 class="text-right"><?php echo $title ?></h2>
+        </div>
+    </div>
 </div>
 
 <div class="mt-5"></div>
 <div class="container">
-    <h2 class="text-center"><?php echo $title ?></h2>
+    <h3 class="text-center">Les chambres populaires</h3>
     <div class="mt-5"></div>
     <div class="row">
         <?php 

@@ -123,7 +123,7 @@ class userController extends Controller
                 $newUser->identifiant   = $model->Email;
                 $newUser->motdepasse    = sha1( $model->Password );
                 $newUser->cle           = uniqid();
-                $newUser->confirme      = false;
+                $newUser->confirme      = true;
                 $newUser->admin         = null;
                 
                 if ( $this->users->Create( $newUser ) )

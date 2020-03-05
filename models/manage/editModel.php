@@ -56,6 +56,7 @@ class EditModel extends Model
             'id'            => 'Civilite',
             'name'          => 'Civilite',
             'class'         => 'form-control',
+            'placeholder'   => 'Civilité *', 
             'required'      => ''
         ],
 
@@ -111,6 +112,7 @@ class EditModel extends Model
             'type'          => 'number',
             'id'            => 'Pays',
             'name'          => 'Pays',
+            'placeholder'   => 'Pays', 
             'class'         => 'form-control'
         ]
     );

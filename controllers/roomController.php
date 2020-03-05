@@ -2,28 +2,38 @@
 
 require CORE. "/controller.php";
 require CORE. "/rooms.php";
+require CORE. "/reservations.php";
 
 require MODELS. "/room/createModel.php";
 require MODELS. "/room/editModel.php";
+require MODELS. "/shared/searchModel.php";
+require MODELS. "/room/reserveModel.php";
+require MODELS. "/room/reserveConfirmModel.php";
+require MODELS. "/room/uploadModel.php";
 
 class roomController extends Controller
 {
-    private $rooms;
+    public $rooms;
+    public $reservation;
 
     function __construct()
     {
         $this->rooms = new Rooms();
+        $this->reservation = new Reservations();
     }
 
     /**
      * 
      * GET : /room/index
-     * Page d'accueil
+     * Page des chambres avec filtre et tri
      * 
      */
     public function index()
     {
-        $this->render( 'index', $this->rooms->GetRooms() );
+        $model = new SearchModel();
+
+        $this->view[ 'rooms' ] = $this->rooms->GetRooms( $model->Search ?? '' );
+        $this->render( 'index', $model );
     }
 
     /**
@@ -69,8 +79,6 @@ class roomController extends Controller
                 $room->douche       = (int)$model->Douche;
                 $room->etage        = (int)$model->Etage;
                 $room->tarif_id     = (int)$model->Tarif;
-                
-                var_dump( $room );
 
                 if ( $this->rooms->Create( $room ) )
                 {
@@ -108,7 +116,9 @@ class roomController extends Controller
         $model->Parse( $room );
 
         $this->view[ 'room' ]   = $room;
+        $this->view[ 'photos' ] = $this->rooms->GetPhotos( $id );
         $this->view[ 'tarifs' ] = $this->rooms->GetTarifs();
+        $this->view[ 'upload' ] = new UploadModel( true );
         
         $this->render( 'edit', $model );
     }
@@ -156,7 +166,9 @@ class roomController extends Controller
         else $this->view["error"] = "Un ou plusieurs champs ne sont pas correctement remplis.";
 
         $this->view[ 'room' ]   = $room;
+        $this->view[ 'photos' ] = $this->rooms->GetPhotos( $id );
         $this->view[ 'tarifs' ] = $this->rooms->GetTarifs();
+        $this->view[ 'upload' ] = new UploadModel( true );
 
         $this->render( 'edit', $model );
     }
@@ -179,8 +191,7 @@ class roomController extends Controller
         if ( $room == null )
             $this->not_found();
 
-        $this->view[ 'room' ] = $room;
-        $this->render( 'delete' );
+        $this->render( 'delete', $room );
     }
 
     /**
@@ -207,8 +218,228 @@ class roomController extends Controller
         }
         else $this->view["error"] = "Une erreur ses produite lors de la suppresion de la chambre.";
 
+        $this->render( 'delete', $room );
+    }
+
+    /**
+     * 
+     * POST : /room/deletePhoto/{id}
+     * Supprime une photo d'une chambre
+     * 
+     * @param   int $id ID de la photo
+     * 
+     */
+    public function deletePhoto( int $id )
+    {
+        if ( !$this->user || !$this->user->admin )
+            $this->unauthorized();
+
+        $photo = $this->rooms->GetPhoto( $id );
+
+        if ( $photo == null )
+            $this->not_found();
+
+        if ( $this->rooms->Detach( $id ) )
+        {
+            Router::redirectLocalWithParams( 'room', 'edit', array( 'id' => $photo->chambre_id ) );
+        }
+        else $this->view["error"] = "Une erreur ses produite lors de la suppresion de la chambre.";
+    }
+
+    /**
+     * 
+     * GET : /room/reserve/{id}
+     * Réserve d'une chambre
+     * 
+     * @param   int $id ID de la chambre
+     * 
+     */
+    public function reserve( int $id )
+    {
+        if ( !$this->user )
+            $this->unauthorized();
+
+        $room = $this->rooms->GetRoomById( $id );
+
+        if ( $room == null )
+            $this->not_found();
+        
+        $model = new ReserveModel( true );
+        
+        $this->view[ 'room' ]   = $room;
+        $this->render( 'reserve', $model );
+    }
+
+
+    /**
+     * 
+     * GET : /room/reserve/{id}
+     * Confirmation de réservation d'une chambre
+     * 
+     * @param   int $id ID de la chambre
+     * 
+     */
+    public function reserveConfirm( int $id )
+    {
+        if ( !$this->user )
+            $this->unauthorized();
+
+        $room = $this->rooms->GetRoomById( $id );
+
+        if ( $room == null )
+            $this->not_found();
+        
+        $model = new ReserveModel();
+
+        if ( $model->IsValid )
+        {
+            $debut = DateTime::createFromFormat('Y-m-d', $model->Debut);
+            $fin = DateTime::createFromFormat('Y-m-d', $model->Fin);
+            $days = $fin->diff($debut)->format("%a");
+
+            if ( $debut < $fin )
+            {
+                if ( !$this->reservation->GetPlannings( $id, $model->Debut, $model->Fin ) )
+                {
+                    $model = new ReserveConfirmModel( true );
+                    
+                    $this->view[ 'price' ] = $days;
+                    $this->view[ 'room' ] = $room;
+                    $this->render( 'reserveConfirm', $model );
+                    return;
+                }
+                else $this->view["error"] = "Cette période ne peut pas être réservé car elle contient une autre réservation.";
+            }
+            else $this->view["error"] = "La date de début dois être inférieur à celle de fin.";
+        }
+        
         $this->view[ 'room' ] = $room;
-        $this->render( 'delete' );
+        $this->render( 'reserve', $model );
+    }
+
+
+    /**
+     * 
+     * GET : /room/reserveFinish/{id}
+     * Finalisation de la réservation d'une chambre
+     * 
+     * @param   int $id ID de la chambre
+     * 
+     */
+    public function reserveFinish( int $id )
+    {
+        if ( !$this->user )
+            $this->unauthorized();
+
+        $room = $this->rooms->GetRoomById( $id );
+
+        if ( $room == null )
+            $this->not_found();
+        
+        $model = new ReserveConfirmModel( true );
+
+        if ( $model->IsValid )
+        {
+            $debut = DateTime::createFromFormat('Y-m-d', $model->Debut);
+            $fin = DateTime::createFromFormat('Y-m-d', $model->Fin);
+            $days = $fin->diff($debut)->format("%a");
+
+            if ( $debut < $fin )
+            {
+                if ( !$this->reservation->GetPlannings( $id, $model->Debut, $model->Fin ) )
+                {
+                    $reservation = new stdClass();
+    
+                    $reservation->chambre_id = $id;
+                    $reservation->debut = $debut->format('Y-m-d');
+                    $reservation->fin = $fin->format('Y-m-d');
+                    $reservation->reservation = -1;
+                    $reservation->paye = 0;
+                    $reservation->client_id = $this->user->id;
+                    
+                    $result = $this->reservation->Create( $reservation );
+                    
+                    if ( $result )
+                    {                        
+                        Router::redirectLocalWithParams( 'room', 'reserveSuccess', array( 'id' => $result ) );
+                    }
+                    else $this->view["error"] = "Une erreur ses produite lors de la réservation de la chambre.";
+                }
+                else $this->view["error"] = "Cette période ne peut pas être réservé car elle contient une autre réservation.";
+            }
+            else $this->view["error"] = "La date de début dois être inférieur à celle de fin.";
+        }
+        
+        $this->view[ 'room' ] = $room;
+        $this->render( 'reserveConfirm', $model );
+    }
+
+    public function reserveSuccess( int $id )
+    {
+        if ( !$this->user )
+            $this->unauthorized();
+
+        $reservation = $this->reservation->GetReservation( $id );
+
+        if ( $this->user->id != $reservation->client_id )
+            $this->not_found();
+
+        if ( $reservation == null )
+            $this->not_found();
+        
+        $this->render( 'reserveSuccess', $reservation );
+    }
+
+    /**
+     * 
+     * POST : /room/upload/{id}
+     * Upload d'une image pour une chambre
+     * 
+     * @param   int $id ID de la chambre
+     * 
+     */
+    public function upload( int $id )
+    {
+        if ( !$this->user || !$this->user->admin )
+            $this->unauthorized();
+
+        $room = $this->rooms->GetRoomById( $id );
+
+        if ( $room == null )
+            $this->not_found();
+
+        $model = new EditModel( true );
+        $model->Parse( $room );
+
+        $upload = new UploadModel();
+
+        if ( $upload->IsValid )
+        {
+            $dir = ROOT. '/assets/images/';
+            $name =  uniqid().'.jpg';
+            
+            if ( move_uploaded_file( $upload->Photo['tmp_name'], $dir.$name ) ) 
+            {
+                $photo = new stdClass();
+
+                $photo->chambre_id = $id;
+                $photo->photo = (string)$name;
+
+                if ( $this->rooms->Attach( $photo ) )
+                {
+                    Router::redirectLocalWithParams( 'room', 'edit', array( 'id' => $id ) );
+                }
+                else $this->view["error2"] = "Une erreur ses produite lors de l'ajout de l'image en base de donnée.";
+            } 
+            else $this->view["error2"] = "Une erreur ses produite lors du téléchargement de l'image.";
+        }
+
+        $this->view[ 'room' ]   = $room;
+        $this->view[ 'photos' ] = $this->rooms->GetPhotos( $id );
+        $this->view[ 'tarifs' ] = $this->rooms->GetTarifs();
+        $this->view[ 'upload' ] = $upload;
+        
+        $this->render( 'edit', $model );
     }
 }
 

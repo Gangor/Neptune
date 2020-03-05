@@ -6,9 +6,7 @@ class Form
      * 
      * Génére un champs de formulaire à partir des informations transmits en paramètre
      * 
-     * @param   string $type    Type d'input
      * @param   array $attr     Personnalisation des attributs
-     * @param   string $name    Identifiant de l'input
      * @param   string $value   Valeur de l'input
      * 
      */
@@ -34,12 +32,29 @@ class Form
             $attribute .= ' aria-describedby="'. $attrs[ 'id' ] .'-error" aria-invalid="false"';
         }
 
-        echo '<span class="text-danger field-validation-error">'. $error .'</span>';
-
         if ( $attrs[ 'type' ] == 'checkbox' )
             echo '<input '. $attribute .' '. ( boolval( $value ) ? 'checked="true"' : '') .'" />';
+        else if ( $attrs[ 'type' ] == 'file' )
+            echo '<input '. $attribute .' />';
         else
             echo '<input '. $attribute .' value="'. $value .'" />';
+
+        echo '<span class="text-danger field-validation-error">'. $error .'</span>';
+    }
+
+    /**
+     * 
+     * Génére un label pour un champs à partir des informations transmits en paramètre
+     * 
+     * @param   array $attr     Personnalisation des attributs
+     * 
+     */
+    static function Label( array $attrs )
+    {
+        if ( isset( $attrs[ 'type' ] ) && $attrs[ 'type' ] == 'checkbox' )
+            echo '<label for="'. $attrs[ 'id' ] .'" class="form-check-label">'. $attrs[ 'placeholder' ] .'</label>';
+        else
+            echo '<label for="'. $attrs[ 'id' ] .'" class="label-control">'. $attrs[ 'placeholder' ] .'</label>';
     }
 
     /**
@@ -74,7 +89,6 @@ class Form
             $attribute .= ' aria-describedby="'. $attrs[ 'id' ] .'-error" aria-invalid="false"';
         }
 
-        echo '<span class="text-danger field-validation-error">'. $error .'</span>';
         echo '<select '. $attribute .'>';
 
         if ( $value == null )
@@ -101,6 +115,7 @@ class Form
         }
 
         echo '</select>';
+        echo '<span class="text-danger field-validation-error">'. $error .'</span>';
     }
 }
 

@@ -61,8 +61,28 @@ class Rooms
 
     /**
      * 
+     * Supprime une photo en base de donnée
+     * 
+     * @param   int $id    ID de la chambre
+     * @return  bool
+     * 
+     */
+    function Detach( int $numero )
+    {
+        if ( $this->conn )
+        {
+            $statement = $this->conn->prepare( 'DELETE FROM photos where num = :numero' );
+            $statement->bindParam(':numero', $numero );
+            
+            return $statement->execute();
+        }
+    }
+
+    /**
+     * 
      * Récupère un tarif par sont id en base de donnée
      * 
+     * @param   int $id  ID du tarif
      * @return object
      * 
      */
@@ -108,27 +128,25 @@ class Rooms
 
     /**
      * 
-     * Récupère la liste des chambres et permet un trie personnalisé
+     * Récupère la liste des chambres et permet la recherche de numéro
      * 
-     * @param   string $column  Colonne à filtrer
-     * @param   string $filter  Valeur de la colonne
+     * @param   string $search  Recherche par numéro
      * @return  object
      * 
      */
-    function GetRooms( string $column = 'numero', string $filter = '%%' )
+    function GetRooms( string $search = '' )
     {
         if ( $this->conn )
         {
-            $statement = $this->conn->prepare( 'SELECT * FROM chambres LEFT JOIN tarifs on tarif_id = id WHERE :column LIKE :filter' );
-            $statement->bindParam(':column', $column );
-            $statement->bindParam(':filter', $filter );
+            $search = "%$search%";
+            $statement = $this->conn->prepare( 'SELECT * FROM chambres LEFT JOIN tarifs on tarif_id = id WHERE numero LIKE :search' );
+            $statement->bindParam(':search', $search );
 
             if ( $statement->execute() )
             {
-                $tarifs = $statement->fetchAll( PDO::FETCH_OBJ );
+                $chambres = $statement->fetchAll( PDO::FETCH_OBJ );
                 $statement->closeCursor();
-
-                return $tarifs;
+                return $chambres;
             }
         }
     }
@@ -145,7 +163,7 @@ class Rooms
     {
         if ( $this->conn )
         {
-            $statement = $this->conn->prepare( 'SELECT * FROM planning INNER JOIN chambres ON chambre_id = numero LEFT JOIN tarifs ON tarif_id = id GROUP BY chambre_id ORDER BY count(*) DESC limit :limit' );
+            $statement = $this->conn->prepare( 'SELECT * FROM planning INNER JOIN chambres ON chambre_id = numero LEFT JOIN tarifs t ON tarif_id = t.id GROUP BY chambre_id ORDER BY count(*) DESC limit :limit' );
             $statement->bindParam(':limit', $limit, PDO::PARAM_INT );
 
             if ( $statement->execute() )
@@ -154,6 +172,56 @@ class Rooms
                 $statement->closeCursor();
 
                 return $tarifs;
+            }
+        }
+    }
+
+    /**
+     * 
+     * Récupère la liste des photos d'une chambre
+     * 
+     * @param int $id    ID de la chambre
+     * @return  object[]
+     * 
+     */
+    function GetPhotos( int $id )
+    {
+        if ( $this->conn )
+        {
+            $statement = $this->conn->prepare( 'SELECT * FROM photos WHERE chambre_id = :id' );
+            $statement->bindParam(':id', $id );
+
+            if ( $statement->execute() )
+            {
+                $photos = $statement->fetchAll( PDO::FETCH_OBJ );
+                $statement->closeCursor();
+
+                return $photos;
+            }
+        }
+    }
+
+    /**
+     * 
+     * Récupère une photos d'une chambre
+     * 
+     * @param int $id    ID de la chambre
+     * @return  object
+     * 
+     */
+    function GetPhoto( int $id )
+    {
+        if ( $this->conn )
+        {
+            $statement = $this->conn->prepare( 'SELECT * FROM photos WHERE num = :id' );
+            $statement->bindParam(':id', $id );
+
+            if ( $statement->execute() )
+            {
+                $photo = $statement->fetch( PDO::FETCH_OBJ );
+                $statement->closeCursor();
+
+                return $photo;
             }
         }
     }
@@ -170,7 +238,7 @@ class Rooms
     {
         if ( $this->conn )
         {
-            $statement = $this->conn->prepare( 'SELECT * FROM chambres where numero = :numero' );
+            $statement = $this->conn->prepare( 'SELECT * FROM chambres LEFT JOIN tarifs on tarif_id = id where numero = :numero' );
             $statement->bindParam(':numero', $numero );
 
             if ( $statement->execute() )
@@ -180,6 +248,27 @@ class Rooms
 
                 return $user;
             }
+        }
+    }
+
+    /**
+     * 
+     * Crée une photo pour une chambre en base de donnée
+     * 
+     * @param   object $chambre    Photo à ajouter
+     * @return  int
+     * 
+     */
+    function Attach( object $photo )
+    {
+        if ( $this->conn )
+        {
+            $statement = $this->conn->prepare( "INSERT INTO photos (chambre_id, photo) VALUES (:chambre_id, :photo)" );            
+            $statement->bindParam(':chambre_id', $photo->chambre_id );
+            $statement->bindParam(':photo', $photo->photo );
+            $statement->execute();
+
+            return $this->conn->lastInsertId();
         }
     }
 

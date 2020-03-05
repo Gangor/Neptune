@@ -18,18 +18,21 @@
                 <?php } ?>
 
                 <div class="form-group">
+                    <?php Form::Label( $models->Validations[ 'OldPassword' ] ) ?>
                     <?php Form::Input( $models->Validations[ 'OldPassword' ], $models->OldPassword ) ?>
                 </div>
                 <div class="form-group">
+                    <?php Form::Label( $models->Validations[ 'NewPassword' ] ) ?>
                     <?php Form::Input( $models->Validations[ 'NewPassword' ], $models->NewPassword ) ?>
                 </div>
                 <div class="form-group">
+                    <?php Form::Label( $models->Validations[ 'Confirm' ] ) ?>
                     <?php Form::Input( $models->Validations[ 'Confirm' ], $models->Confirm ) ?>
                 </div>
 
                 <div class="form-group text-center">
                     <button type="submit" class="btn btn-success">Confirmer</button>
-                    <a class="btn btn-primary" href="/manage">Retour</a>
+                    <a class="btn btn-primary" href="/manage/edit">Retour</a>
                 </div>
             </form>
         </div>

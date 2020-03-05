@@ -3,8 +3,14 @@
 class Model
 {
     /**
+     * Erreur générale
+     * @var bool $Error
+     */
+    public $Error;
+
+    /**
      * Model valide
-     * @var bool
+     * @var bool $IsValid
      */
     public $IsValid = true;
 
@@ -22,7 +28,7 @@ class Model
             $value      = $this->getPost( $Validation );
 
             $this->Validations[ $Validation[ 'id' ] ][ 'Error' ] = '';
-
+            
             if ( !$ignore )
             {
                 $custom = 'custom'.$property.'Validation';
@@ -47,12 +53,23 @@ class Model
      * @return      string
      * 
      */
-    function getPost( array $fields )
+    function getPost( array $field )
     {
-        $name       = $fields[ 'name' ] ?? null;
-        $type       = $fields[ 'type' ] ?? null;
+        $name       = $field[ 'name' ] ?? null;
+        $type       = $field[ 'type' ] ?? null;
 
-        if ( $type != 'checkbox' )
+        if ( $type == 'checkbox' )
+        {
+            return isset( $_POST[ $name ] );
+        }
+        else if ( $type == 'file' )
+        {
+            if ( isset( $_FILES[ $name ] ) )
+                return $_FILES[ $name ];
+
+            return NULL;
+        }
+        else
         {
             if ( isset( $_POST[ $name ] ) )
                 if ( !empty( $_POST[ $name ] ) )
@@ -60,8 +77,6 @@ class Model
 
             return NULL;
         }
-
-        return isset( $_POST[ $name ] );
     }
 
     /**
@@ -72,14 +87,14 @@ class Model
      * @param var  $value           Vakye du champs
      * 
      */
-    private function validField( array $fields, $value )
+    private function validField( array $field, $value )
     {
-        $min        = $fields[ 'min' ] ?? null;
-        $minlength  = $fields[ 'minlength' ] ?? null;
-        $max        = $fields[ 'max' ] ?? null;
-        $maxlength  = $fields[ 'maxlength' ] ?? null;
-        $type       = $fields[ 'type' ] ?? null;
-        $require    = array_key_exists( 'required', $fields );
+        $min        = $field[ 'min' ] ?? null;
+        $minlength  = $field[ 'minlength' ] ?? null;
+        $max        = $field[ 'max' ] ?? null;
+        $maxlength  = $field[ 'maxlength' ] ?? null;
+        $type       = $field[ 'type' ] ?? null;
+        $require    = array_key_exists( 'required', $field );
 
         if ( $type != null && $require )
         {
@@ -95,7 +110,15 @@ class Model
                 case 'url':
                     if ( strlen( $value ) == 0 )
                     {
-                        $this->Validations[ $fields[ 'id' ] ][ 'Error' ] = "Ce champ est obligatoire.";
+                        $this->Validations[ $field[ 'id' ] ][ 'Error' ] = "Ce champ est obligatoire.";
+                        return false;
+                    }
+                break;
+
+                case 'file':
+                    if ( !$value )
+                    {
+                        $this->Validations[ $field[ 'id' ] ][ 'Error' ] = "Ce champ est obligatoire.";
                         return false;
                     }
                 break;
@@ -104,7 +127,7 @@ class Model
                 case 'checkbox':
                     if ( intval( $value ) == 0 )
                     {
-                        $this->Validations[ $fields[ 'id' ] ][ 'Error' ] = "Ce champ est obligatoire.";
+                        $this->Validations[ $field[ 'id' ] ][ 'Error' ] = "Ce champ est obligatoire.";
                         return false;
                     }
                 break;
@@ -115,7 +138,7 @@ class Model
         {
             if ( strlen( $value) < $minlength )
             {
-                $this->Validations[ $fields[ 'id' ] ][ 'Error' ] = "Veuillez fournir au moins $minlength caractères.";
+                $this->Validations[ $field[ 'id' ] ][ 'Error' ] = "Veuillez fournir au moins $minlength caractères.";
                 return false;
             }
         }
@@ -124,7 +147,7 @@ class Model
         {
             if ( strlen( $value) > $maxlength )
             {
-                $this->Validations[ $fields[ 'id' ] ][ 'Error' ] = "Veuillez fournir au plus $maxlength caractères.";
+                $this->Validations[ $field[ 'id' ] ][ 'Error' ] = "Veuillez fournir au plus $maxlength caractères.";
                 return false;
             }
         }
@@ -133,7 +156,7 @@ class Model
         {
             if ( intval( $value) < $min )
             {
-                $this->Validations[ $fields[ 'id' ] ][ 'Error' ] = "Veuillez fournir une valeur supérieure ou égale à $min.";
+                $this->Validations[ $field[ 'id' ] ][ 'Error' ] = "Veuillez fournir une valeur supérieure ou égale à $min.";
                 return false;
             }
         }
@@ -142,7 +165,7 @@ class Model
         {
             if ( intval( $value) < $max )
             {
-                $this->Validations[ $fields[ 'id' ] ][ 'Error' ] = "Veuillez fournir une valeur inférieure ou égale à $min.";
+                $this->Validations[ $field[ 'id' ] ][ 'Error' ] = "Veuillez fournir une valeur inférieure ou égale à $min.";
                 return false;
             }
         }
@@ -151,25 +174,25 @@ class Model
         {
             if ( $type == 'numeric' && !is_numeric( $value ) )
             {
-                $this->Validations[ $fields[ 'id' ] ][ 'Error' ] = "Veuillez fournir seulement des chiffres.";
+                $this->Validations[ $field[ 'id' ] ][ 'Error' ] = "Veuillez fournir seulement des chiffres.";
                 return false;
             }
 
-            if ( $type == 'date' && !$this->validateDate( $value ) )
+            if ( $type == 'date' && !$this->validateDate( (string)$value ) )
             {
-                $this->Validations[ $fields[ 'id' ] ][ 'Error' ] = "Veuillez fournir une date valide.";
+                $this->Validations[ $field[ 'id' ] ][ 'Error' ] = "Veuillez fournir une date valide.";
                 return false;
             }
 
             if ( $type == 'email' && !filter_var( $value, FILTER_VALIDATE_EMAIL ) )
             {
-                $this->Validations[ $fields[ 'id' ] ][ 'Error' ] = "Veuillez fournir une adresse électronique valide.";
+                $this->Validations[ $field[ 'id' ] ][ 'Error' ] = "Veuillez fournir une adresse électronique valide.";
                 return false;
             }
 
             if ( $type == 'url' && !filter_var( $value, FILTER_VALIDATE_URL ) )
             {
-                $this->Validations[ $fields[ 'id' ] ][ 'Error' ] = "Veuillez fournir une adresse URL valide.";
+                $this->Validations[ $field[ 'id' ] ][ 'Error' ] = "Veuillez fournir une adresse URL valide.";
                 return false;
             }
         }

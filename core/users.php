@@ -91,6 +91,31 @@ class Users
 
     /**
      * 
+     * Récupère la liste des utilisateurs et permet la recherche par prénom ou nom en base de donnée
+     * 
+     * @return object[]
+     * 
+     */
+    function GetUsers( string $search )
+    {
+        if ( $this->conn )
+        {
+            $search = "%$search%";
+            $statement = $this->conn->prepare( 'SELECT * FROM clients WHERE prenom LIKE :search or nom LIKE :search or identifiant LIKE :search' );
+            $statement->bindParam( ':search', $search );
+
+            if ( $statement->execute() )
+            {
+                $users = $statement->fetchAll( PDO::FETCH_OBJ );
+                $statement->closeCursor();
+
+                return $users;
+            }
+        }
+    }
+
+    /**
+     * 
      * Récupère une utilisateur à partir sont ID en base de donnée
      * 
      * @param   int $id    ID de l'utilisateur

@@ -16,27 +16,27 @@
                 <?php } ?>
 
                 <div class="form-group">
-                    <label for="Numero" class="label-control">Numero *</label>
+                    <?php Form::Label( $models->Validations[ 'Numero' ] ) ?>
                     <?php Form::Input( $models->Validations[ 'Numero' ], $models->Numero ) ?>
                 </div>
                 <div class="form-group">
-                    <label for="Capacite" class="label-control">Capacité *</label>
+                    <?php Form::Label( $models->Validations[ 'Capacite' ] ) ?>
                     <?php Form::Input( $models->Validations[ 'Capacite' ], $models->Capacite ) ?>
                 </div>
                 <div class="form-group">
-                    <label for="Exposition" class="label-control">Exposition *</label>
+                    <?php Form::Label( $models->Validations[ 'Exposition' ] ) ?>
                     <?php Form::Input( $models->Validations[ 'Exposition' ], $models->Exposition ) ?>
                 </div>
                 <div class="form-check">
                     <?php Form::Input( $models->Validations[ 'Douche' ], $models->Douche ) ?>
-                    <label for="Douche" class="form-check-label">Douche</label>
+                    <?php Form::Label( $models->Validations[ 'Douche' ] ) ?>
                 </div>
                 <div class="form-group">
-                    <label for="Etage" class="label-control">Etage *</label>
+                    <?php Form::Label( $models->Validations[ 'Etage' ] ) ?>
                     <?php Form::Input( $models->Validations[ 'Etage' ], $models->Etage ) ?>
                 </div>
                 <div class="form-group">
-                    <label for="Tarif" class="label-control">Prix (Euro) *</label>
+                    <?php Form::Label( $models->Validations[ 'Tarif' ] ) ?>
                     <?php Form::Select( $models->Validations[ 'Tarif' ], $tarifs, array( 'id', 'prix' ), $models->Tarif ) ?>
                 </div>
                 <div class="form-group">
@@ -44,6 +44,9 @@
                     <a class="btn btn-primary" href="/room">Retour</a>
                 </div>
             </form>
+        </div>
+        <div class="col-md-6">
+            <?php $this->renderPartial( VIEWS. '/room/_upload.php', $upload ) ?>
         </div>
     </div>
 </div>

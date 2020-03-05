@@ -53,10 +53,9 @@ class createModel extends Model
             'type'          => 'text',
             'id'            => 'Exposition',
             'name'          => 'Exposition',
-            'maxlength'     => 100,
-            'placeholder'   => 'Exposition *', 
-            'class'         => 'form-control', 
-            'required'      => ''
+            'maxlength'     => 20,
+            'placeholder'   => 'Exposition', 
+            'class'         => 'form-control',
         ],
 
         'Douche' => [ 

@@ -5,7 +5,7 @@ require CORE. "/rooms.php";
 
 class homeController extends Controller
 {
-    private $rooms;
+    public $rooms;
 
     function __construct()
     {

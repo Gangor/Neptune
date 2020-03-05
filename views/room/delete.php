@@ -10,10 +10,10 @@
         <h5>Êtes-vous sur de vouloir supprimer ceci?</h5>
         <dl class="dl-horizontal">
             <dt>Chambre n°</dt>
-            <dd><?php echo $room->numero ?></dd>
+            <dd><?php echo $models->numero ?></dd>
         </dl>
 
-        <form id="delete" name="delete" action="/room/deleteConfirm/<?php echo $room->numero ?>" method="post">
+        <form id="delete" name="delete" action="/room/deleteConfirm/<?php echo $models->numero ?>" method="post">
             <div class="form-actions no-color">
                 <div class="form-group text-center">
                     <input type="submit" value="Supprimer" class="btn btn-danger" />

@@ -29,26 +29,33 @@
                 <h5 class="text-center">Modifier les informations personnelles</h5>
 
                 <div class="form-group">
+                    <?php Form::Label( $models->Validations[ 'Civilite' ] ) ?>
                     <?php Form::Select( $models->Validations[ 'Civilite' ], $models->civilites, null, $models->Civilite ) ?>
                 </div>
                 <div class="form-group">
+                    <?php Form::Label( $models->Validations[ 'Prenom' ] ) ?>
                     <?php Form::Input( $models->Validations[ 'Prenom' ], $models->Prenom ) ?>
                 </div>
                 <div class="form-group">
+                    <?php Form::Label( $models->Validations[ 'Nom' ] ) ?>
                     <?php Form::Input( $models->Validations[ 'Nom' ], $models->Nom ) ?>
                 </div>
 
                 <?php if ( !$user->admin ) { ?>
                     <div class="form-group">
+                    <?php Form::Label( $models->Validations[ 'Pays' ] ) ?>
                     <?php Form::Select( $models->Validations[ 'Pays' ], $pays, array( 'id', 'nom' ), $models->Pays ) ?>
                     </div>
                     <div class="form-group">
+                    <?php Form::Label( $models->Validations[ 'Adresse' ] ) ?>
                     <?php Form::Input( $models->Validations[ 'Adresse' ], $models->Adresse ) ?>
                     </div>
                     <div class="form-group">
+                    <?php Form::Label( $models->Validations[ 'Ville' ] ) ?>
                     <?php Form::Input( $models->Validations[ 'Ville' ], $models->Ville ) ?>
                     </div>
                     <div class="form-group">
+                    <?php Form::Label( $models->Validations[ 'CodePostal' ] ) ?>
                     <?php Form::Input( $models->Validations[ 'CodePostal' ], $models->CodePostal ) ?>
                     </div>
                 <?php } ?>

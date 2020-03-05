@@ -12,23 +12,23 @@
                 <div class="text-danger"><?php echo $error; ?></div>
             
                 <div class="form-group">
-                    <label for="Capacite" class="label-control">Capacité *</label>
+                    <?php Form::Label( $models->Validations[ 'Capacite' ] ) ?>
                     <?php Form::Input( $models->Validations[ 'Capacite' ], $models->Capacite ) ?>
                 </div>
                 <div class="form-group">
-                    <label for="Exposition" class="label-control">Exposition *</label>
+                    <?php Form::Label( $models->Validations[ 'Exposition' ] ) ?>
                     <?php Form::Input( $models->Validations[ 'Exposition' ], $models->Exposition ) ?>
                 </div>
                 <div class="form-check">
                     <?php Form::Input( $models->Validations[ 'Douche' ], $models->Douche ) ?>
-                    <label for="Douche" class="form-check-label">Douche</label>
+                    <?php Form::Label( $models->Validations[ 'Douche' ] ) ?>
                 </div>
                 <div class="form-group">
-                    <label for="Etage" class="label-control">Etage *</label>
+                    <?php Form::Label( $models->Validations[ 'Etage' ] ) ?>
                     <?php Form::Input( $models->Validations[ 'Etage' ], $models->Etage ) ?>
                 </div>
                 <div class="form-group">
-                    <label for="Tarif" class="label-control">Prix (Euro) *</label>
+                    <?php Form::Label( $models->Validations[ 'Tarif' ] ) ?>
                     <?php Form::Select( $models->Validations[ 'Tarif' ], $tarifs, array( 'id', 'prix' ), $models->Tarif ) ?>
                 </div>
                 <div class="form-group">

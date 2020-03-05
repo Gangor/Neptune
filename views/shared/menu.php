@@ -1,5 +1,5 @@
 <!-- Image and text -->
-<nav class="navbar navbar-expand-lg navbar-light">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMobile" aria-controls="navbarMobile" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -25,6 +25,12 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown">Admin<span class="caret"></span></a>
                     <ul class="dropdown-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/clients/index">Utilisateurs</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/reservation/index">Réservations</a>
+                        </li>
                     </ul>
                 </li>
             <?php } ?>
@@ -35,6 +41,9 @@
                     <ul class="dropdown-menu">
                         <li class="nav-item">
                             <a class="nav-link" href="/manage/edit">Paramètres</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/manage/reservations">Réservations</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/user/logout">Déconnexion</a>

@@ -1,17 +1,60 @@
 <?php
 
 require CORE. "/controller.php";
+require CORE. "/reservations.php";
 
 require MODELS. "/manage/editModel.php";
 require MODELS. "/manage/editPasswordModel.php";
+require MODELS. "/reservation/searchModel.php";
 
 class manageController extends Controller
 {
     private $users;
+    private $reservation;
 
     public function __construct()
     {
         $this->users = new Users();
+        $this->reservation = new Reservations();
+    }
+
+    /**
+     * 
+     * GET : /clients/delete
+     * Suppression du compte
+     * 
+     * @param   int $id ID de la chambre
+     * 
+     */
+    public function delete()
+    {
+        if ( !$this->user )
+            $this->unauthorized();
+
+        $this->render( 'delete', $this->user );
+    }
+
+    /**
+     * 
+     * POST : /clients/deleteConfirm
+     * Confirmation de suppression du compte
+     * 
+     * @param   int $id ID de l'utilisateur
+     * 
+     */
+    public function deleteConfirm()
+    {
+        if ( !$this->user )
+            $this->unauthorized();
+
+        if ( $this->users->delete( $this->user->id ) )
+        {
+            Session::destroy();
+            Router::redirectLocal( 'home', 'index' );
+        }
+        else $this->view["error"] = "Une erreur ses produite lors de la suppresion de l'utilisateur.";
+
+        $this->render( 'delete', $this->user );
     }
 
     /*
@@ -68,7 +111,7 @@ class manageController extends Controller
         else $this->view[ 'error' ] = 'Un ou plusieurs champs ne sont pas correctement remplis.';
 
         $this->view[ 'pays' ] = $this->users->GetPays();
-        $this->render( 'index', $model );
+        $this->render( 'edit', $model );
     }
 
     /*
@@ -133,6 +176,76 @@ class manageController extends Controller
 
         header('Content-type: application/json');
         echo json_encode( $this->user );
+    }
+
+    /*
+     *
+     * GET : /manage/reservations
+     * Page de reservations de l'utilisateur
+     */
+    public function reservations()
+    {
+        if ( !$this->user )
+            $this->unauthorized();
+
+        $model = new SearchModel();
+        
+        $this->view[ 'reservations' ] = $this->reservation->GetReservationsByUser( $this->user->id, $model->Search ?? '' );
+        $this->render( 'reservations', $model );
+    }
+
+    /**
+     * 
+     * GET : /reservation/deleteReservation/{id}
+     * Suppression d'une réservation
+     * 
+     * @param   int $id ID de la chambre
+     * 
+     */
+    public function deleteReservation( int $id )
+    {
+        if ( !$this->user )
+            $this->unauthorized();
+
+        $reservation = $this->reservation->GetReservation( $id );
+
+        if ( $reservation == null )
+            $this->not_found();
+
+        if ( $reservation->client_id != $this->user->id )
+            $this->not_found();
+
+        $this->render( 'deleteReservation', $reservation );
+    }
+
+    /**
+     * 
+     * POST : /reservation/deleteReservationConfirm/{id}
+     * Confirmation de suppression d'une réservation
+     * 
+     * @param   int $id ID de l'utilisateur
+     * 
+     */
+    public function deleteReservationConfirm( int $id )
+    {
+        if ( !$this->user )
+            $this->unauthorized();
+
+        $reservation = $this->reservation->GetReservation( $id );
+
+        if ( $reservation == null )
+            $this->not_found();
+
+        if ( $reservation->client_id != $this->user->id )
+            $this->not_found();
+
+        if ( $this->reservation->delete( $id ) )
+        {
+            Router::redirectLocal( 'manage', 'reservations' );
+        }
+        else $this->view["error"] = "Une erreur ses produite lors de la suppresion de l'utilisateur.";
+
+        $this->render( 'deleteReservation', $reservation );
     }
 }
 

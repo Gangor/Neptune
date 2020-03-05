@@ -45,9 +45,18 @@ class Router
         return $default;
     }
 
+    /**
+     * 
+     * Extrait la partie avant le déterminant d'un chaine de caractère
+     * 
+     * @param   string $str    Chaine de caractère
+     * @param   string $c      Caractère de déterminant 
+     * @return  string
+     * 
+     */
     static function before( string $str, string $c)
     {
-        if (strpos( $str, $c ))
+        if ( strpos( $str, $c ) )
             return substr($str, 0, strpos( $str, $c ) );
         else
             return $str;
@@ -96,11 +105,18 @@ class Router
      */
     static public function redirectWithParams( string $url, array $params )
     {
-        foreach( $params as $param ) {
-            $url .= '/'.$param;
+        $i = 0;
+
+        foreach( $params as $param => $key ) {
+            
+            if ($i > 0)
+                $url .= '&';
+
+            $url .= $param.'='.$key;
+            $i++;
         }
 
-        header( 'Location: '. $url );
+        header( 'Location: /'. $url );
         exit( 0 );
     }
 
@@ -127,12 +143,19 @@ class Router
      */
     static public function redirectLocalWithParams( string $controller, string $action, array $params )
     {
-        $url = './'.$controller.'/'.$action;
+        $i = 0;
+        $url = './'.$controller.'/'.$action.'?';
 
-        foreach( $params as $param ) {
-            $url .= '/'.$param;
+        foreach( $params as $param => $key ) {
+            
+            if ($i > 0)
+                $url .= '&';
+
+            $url .= $param.'='.$key;
+            $i++;
         }
-        header( 'Location: '. $url );
+
+        header( 'Location: /'. $url );
         exit( 0 );
     }
 }

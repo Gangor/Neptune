@@ -17,9 +17,11 @@
                 </div>
                 
                 <div class="form-group">
+                    <?php Form::Label( $models->Validations[ 'Email' ] ) ?>
                     <?php Form::Input( $models->Validations[ 'Email' ], $models->Email ); ?>
                 </div>
                 <div class="form-group">
+                    <?php Form::Label( $models->Validations[ 'Password' ] ) ?>
                     <?php Form::Input( $models->Validations[ 'Password' ], $models->Password ) ?>
                 </div>
                 <div class="form-group text-center">

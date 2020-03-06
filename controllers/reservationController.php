@@ -150,8 +150,11 @@ class reservationController extends Controller
 
         if ( $reservation == null )
             $this->not_found();
+
+        header( 'Content-Disposition: attachment; filename=facture'. $reservation->tid .'.pdf' );
+        header( 'Content-Type: application/pdf' );
         
-        $this->invoice->Create( $reservation, 'I' );
+        echo $this->invoice->Create( $reservation );
     }
 }
 

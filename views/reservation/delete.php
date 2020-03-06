@@ -16,7 +16,7 @@
             <dt>Date de debut</dt>
             <dd><?php echo date( 'd/m/Y', strtotime( $models->debut ) ) ?></dd>
             <dt>Date de fin</dt>
-            <dd><?php echo date( 'd/m/Y', strtotime( $reservation->fin ) ) ?></dd>
+            <dd><?php echo date( 'd/m/Y', strtotime( $models->fin ) ) ?></dd>
         </dl>
 
         <form id="delete" name="delete" action="/reservation/deleteConfirm/<?php echo $models->tid ?>" method="post">

@@ -10,7 +10,7 @@ class Form
      * @param   string $value   Valeur de l'input
      * 
      */
-    static function Input( array $attrs, ?string $value = "" )
+    static function Input( array $attrs, ?string $value = "", bool $validation = true )
     {
         $attribute = '';
         $error = '';
@@ -39,7 +39,8 @@ class Form
         else
             echo '<input '. $attribute .' value="'. $value .'" />';
 
-        echo '<span class="text-danger field-validation-error">'. $error .'</span>';
+        if ( $validation )
+            echo '<span class="text-danger field-validation-error">'. $error .'</span>';
     }
 
     /**

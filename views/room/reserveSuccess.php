@@ -7,7 +7,7 @@
     <h2 class="text-center"><?php echo $title ?></h2>
     <div class="mt-5"></div>
     <div class="row justify-content-md-center">
-        <div class="col-md-6">
+        <div class="col-md-6 text-center">
 
             <!-- progressbar -->
             <ul id="progressbar">

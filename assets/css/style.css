@@ -43,16 +43,25 @@ nav {
 .center-block {
     flex: 1;
     width: 100%;
-    padding: 350px 0;
+    padding: 200px 0;
 }
 
 #home-background h2 {
-    color: #d9d9d9;
-    text-shadow: -1px -1px 1px rgba(255,255,255,.1), 1px 1px 1px rgba(0,0,0,.5);
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    border: none;
+    font: normal 70px/1 "Aladin", Helvetica, sans-serif;
+    color: rgba(48,48,48,1);
+    text-align: center;
+    text-transform: normal;
+    -o-text-overflow: clip;
+    text-overflow: clip;
+    white-space: pre;
+    text-shadow: 1px 1px 0 rgba(140,140,140,0.6) , -1px -1px 1px rgba(0,0,0,0.67) ;
 }
 
 footer {
-    margin-top: 5em;
     background-color: #26272b;
     border-top: 1px solid black;
     padding: 20px 0 20px;

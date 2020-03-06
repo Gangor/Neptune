@@ -88,13 +88,21 @@ class billingController extends Controller
                 $invoice->filename = 'facture.pdf';
 
                 $this->email->Send( $this->user, 'Réservation', 'reservation', $invoice );
-                Router::redirectLocal( 'manage', 'reservations' );
+                Router::redirectLocal( 'billing', 'finish' );
             }
             else $this->view["error"] = "Une erreur ses produite lors du paiement de votre réservation.";
         }
 
         $this->view[ 'reservation' ] = $reservation;
         $this->render( 'buy', $model );
+    }
+
+    public function finish()
+    {
+        if ( !$this->user )
+            $this->unauthorized();
+            
+        $this->render( 'finish' );
     }
 }
 

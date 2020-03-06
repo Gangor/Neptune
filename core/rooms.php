@@ -226,6 +226,33 @@ class Rooms
 
     /**
      * 
+     * Récupère la liste des chambres disponible dans la période précisé en base de donnée
+     * 
+     * @param   int $debut Date de début
+     * @param   int $fin   Date de fin
+     * @return  object
+     * 
+     */
+    function GetRoomsAvailable( string $debut, string $fin )
+    {
+        if ( $this->conn )
+        {
+            $statement = $this->conn->prepare( 'SELECT * FROM chambres LEFT JOIN tarifs on tarif_id = id WHERE numero not in (SELECT chambre_id FROM planning where reservation = -1 and ((debut between :debut and :fin) OR (fin between :debut and :fin)))' );
+            $statement->bindParam(':debut', $debut );
+            $statement->bindParam(':fin', $fin );
+
+            if ( $statement->execute() )
+            {
+                $user = $statement->fetchAll( PDO::FETCH_OBJ );
+                $statement->closeCursor();
+
+                return $user;
+            }
+        }
+    }
+
+    /**
+     * 
      * Mes à jour de la chambre en base de donnée
      * 
      * @param   object $chambre    Chambre à mettre à jour

@@ -9,6 +9,8 @@
 
     <title>Neptune - <?php echo $title ?></title>
 
+    <link async href="http://fonts.googleapis.com/css?family=Aladin" data-generated="http://enjoycss.com" rel="stylesheet" type="text/css"/>
+    <link async href="http://fonts.googleapis.com/css?family=Nova%20Flat" data-generated="http://enjoycss.com" rel="stylesheet" type="text/css"/>
     <link href="/assets/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/assets/bower_components/font-awesome/css/all.min.css" rel="stylesheet" />
     <link href="/assets/css/style.css" rel="stylesheet" />

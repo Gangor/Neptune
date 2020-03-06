@@ -25,7 +25,7 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group text-center">
                     <input type="submit" value="Confirmer" class="btn btn-success" />
                     <a class="btn btn-primary" href="/room">Retour</a>
                 </div>

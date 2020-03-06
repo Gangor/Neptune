@@ -154,7 +154,7 @@ class Model
 
         if ( $min )
         {
-            if ( intval( $value) < $min )
+            if ( intval( $value ) < $min )
             {
                 $this->Validations[ $field[ 'id' ] ][ 'Error' ] = "Veuillez fournir une valeur supérieure ou égale à $min.";
                 return false;
@@ -163,7 +163,7 @@ class Model
 
         if ( $max )
         {
-            if ( intval( $value) < $max )
+            if ( intval( $value ) > $max )
             {
                 $this->Validations[ $field[ 'id' ] ][ 'Error' ] = "Veuillez fournir une valeur inférieure ou égale à $min.";
                 return false;

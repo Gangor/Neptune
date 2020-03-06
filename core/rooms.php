@@ -18,6 +18,27 @@ class Rooms
 
     /**
      * 
+     * Crée une photo pour une chambre en base de donnée
+     * 
+     * @param   object $chambre    Photo à ajouter
+     * @return  int
+     * 
+     */
+    function Attach( object $photo )
+    {
+        if ( $this->conn )
+        {
+            $statement = $this->conn->prepare( "INSERT INTO photos (chambre_id, photo) VALUES (:chambre_id, :photo)" );            
+            $statement->bindParam(':chambre_id', $photo->chambre_id );
+            $statement->bindParam(':photo', $photo->photo );
+            $statement->execute();
+
+            return $this->conn->lastInsertId();
+        }
+    }
+
+    /**
+     * 
      * Crée une chambre en base de donnée
      * 
      * @param   object $chambre    Chambre à ajouter
@@ -75,54 +96,6 @@ class Rooms
             $statement->bindParam(':numero', $numero );
             
             return $statement->execute();
-        }
-    }
-
-    /**
-     * 
-     * Récupère un tarif par sont id en base de donnée
-     * 
-     * @param   int $id  ID du tarif
-     * @return object
-     * 
-     */
-    function GetTarif( int $id )
-    {
-        if ( $this->conn )
-        {
-            $statement = $this->conn->prepare( 'SELECT * FROM tarifs WHERE id = :id' );
-            $statement->bindParam(':id', $id );
-
-            if ( $statement->execute() )
-            {
-                $tarif = $statement->fetch( PDO::FETCH_OBJ );
-                $statement->closeCursor();
-
-                return $tarif;
-            }
-        }
-    }
-
-    /**
-     * 
-     * Récupère la liste des tarifs en base de donnée
-     * 
-     * @return object[]
-     * 
-     */
-    function GetTarifs()
-    {
-        if ( $this->conn )
-        {
-            $statement = $this->conn->prepare( 'SELECT * FROM tarifs' );
-
-            if ( $statement->execute() )
-            {
-                $tarifs = $statement->fetchAll();
-                $statement->closeCursor();
-
-                return $tarifs;
-            }
         }
     }
 
@@ -248,27 +221,6 @@ class Rooms
 
                 return $user;
             }
-        }
-    }
-
-    /**
-     * 
-     * Crée une photo pour une chambre en base de donnée
-     * 
-     * @param   object $chambre    Photo à ajouter
-     * @return  int
-     * 
-     */
-    function Attach( object $photo )
-    {
-        if ( $this->conn )
-        {
-            $statement = $this->conn->prepare( "INSERT INTO photos (chambre_id, photo) VALUES (:chambre_id, :photo)" );            
-            $statement->bindParam(':chambre_id', $photo->chambre_id );
-            $statement->bindParam(':photo', $photo->photo );
-            $statement->execute();
-
-            return $this->conn->lastInsertId();
         }
     }
 

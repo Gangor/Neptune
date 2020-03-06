@@ -26,10 +26,13 @@
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown">Admin<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li class="nav-item">
-                            <a class="nav-link" href="/clients/index">Utilisateurs</a>
+                            <a class="nav-link" href="/reservation/index">Réservations</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/reservation/index">Réservations</a>
+                            <a class="nav-link" href="/tarif/index">Tarifs</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/clients/index">Utilisateurs</a>
                         </li>
                     </ul>
                 </li>
@@ -42,9 +45,11 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/manage/edit">Paramètres</a>
                         </li>
+                        <?php if ( Session::Loggin() && !$user->admin ) { ?>
                         <li class="nav-item">
                             <a class="nav-link" href="/manage/reservations">Réservations</a>
                         </li>
+                        <?php } ?>
                         <li class="nav-item">
                             <a class="nav-link" href="/user/logout">Déconnexion</a>
                         </li>
@@ -75,6 +80,15 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown">Admin<span class="caret"></span></a>
                     <ul class="dropdown-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/reservation/index">Réservations</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/tarif/index">Tarifs</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/clients/index">Utilisateurs</a>
+                        </li>
                     </ul>
                 </li>
             <?php } ?>
@@ -86,6 +100,11 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/manage/index">Paramètres</a>
                         </li>
+                        <?php if ( Session::Loggin() && !$user->admin ) { ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/manage/reservations">Réservations</a>
+                        </li>
+                        <?php } ?>
                         <li class="nav-item">
                             <a class="nav-link" href="/user/logout">Déconnexion</a>
                         </li>

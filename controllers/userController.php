@@ -1,6 +1,7 @@
 <?php
 
 require CORE. "/controller.php";
+require CORE. "/email.php";
 
 require MODELS. "/user/loginModel.php";
 require MODELS. "/user/registerModel.php";
@@ -8,10 +9,12 @@ require MODELS. "/user/registerModel.php";
 class userController extends Controller
 {
     private $users;
+    private $email;
 
     public function __construct()
     {
         $this->users = new Users();
+        $this->email = new Email();
     }
 
     /*
@@ -123,12 +126,14 @@ class userController extends Controller
                 $newUser->identifiant   = $model->Email;
                 $newUser->motdepasse    = sha1( $model->Password );
                 $newUser->cle           = uniqid();
-                $newUser->confirme      = true;
+                $newUser->confirme      = 0;
                 $newUser->admin         = null;
                 
                 if ( $this->users->Create( $newUser ) )
                 {
-                    Router::redirectLocal( 'user', 'login' );
+                    $this->email->Send( $newUser, 'Inscription', 'register' );
+                    $this->render( 'registerConfirm', $newUser );
+                    return;
                 }
                 else $this->view[ 'error' ] = 'Une erreur ses produite lors de la création du compte.';
             }
@@ -138,6 +143,25 @@ class userController extends Controller
 
         $this->view[ 'pays' ] = $this->users->GetPays();
         $this->render( 'register', $model );
+    }
+
+    /*
+     *
+     * POST : /user/validate
+     * Page de validation d'inscription
+     * 
+     */
+    public function validate( string $cle )
+    {
+        $user = $this->users->GetUserByKey( $cle );
+
+        if ( $user == null )
+            return $this->not_found();
+
+        $user->confirme = true;
+        $this->users->Update( $user );
+
+        $this->render( 'validate' );
     }
 }
 

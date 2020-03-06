@@ -1,6 +1,7 @@
 <?php
 
 require CORE. "/controller.php";
+require CORE. "/invoice.php";
 require CORE. "/reservations.php";
 
 require MODELS. "/reservation/searchModel.php";
@@ -8,11 +9,13 @@ require MODELS. "/reservation/clearModel.php";
 
 class reservationController extends Controller
 {
-    public $reservation;
+    public $invoice;
+    public $reservations;
 
     function __construct()
     {
-        $this->reservation = new Reservations();
+        $this->invoice = new Invoice();
+        $this->reservations = new Reservations();
     }
 
     /**
@@ -28,7 +31,7 @@ class reservationController extends Controller
 
         $model = new SearchModel();
         
-        $this->view[ 'reservations' ] = $this->reservation->GetReservations( $model->Search ?? '' );
+        $this->view[ 'reservations' ] = $this->reservations->GetReservations( $model->Search ?? '' );
         $this->render( 'index', $model );
     }
 
@@ -47,7 +50,7 @@ class reservationController extends Controller
 
         $model = new ClearModel( true );
 
-        $this->view[ 'reservations' ] = $this->reservation->GetReservations( '' );
+        $this->view[ 'reservations' ] = $this->reservations->GetReservations( '' );
         $this->render( 'clear', $model );
     }
 
@@ -70,7 +73,7 @@ class reservationController extends Controller
         {
             if ( $this->user->motdepasse == sha1( $model->Password ) )
             {
-                if ( $this->reservation->clear() )
+                if ( $this->reservations->clear() )
                 {
                     Router::redirectLocal( 'reservation', 'index' );
                 }
@@ -80,7 +83,7 @@ class reservationController extends Controller
         }
         else $this->view[ 'error' ] = 'Un ou plusieurs champs ne sont pas correctement remplis.';
 
-        $this->render( 'clear', $this->reservation->GetReservations( '' ) );
+        $this->render( 'clear', $this->reservations->GetReservations( '' ) );
     }
 
     /**
@@ -96,7 +99,7 @@ class reservationController extends Controller
         if ( !$this->user || !$this->user->admin )
             $this->unauthorized();
 
-        $reservation = $this->reservation->GetReservation( $id );
+        $reservation = $this->reservations->GetReservation( $id );
 
         if ( $reservation == null )
             $this->not_found();
@@ -117,18 +120,38 @@ class reservationController extends Controller
         if ( !$this->user || !$this->user->admin )
             $this->unauthorized();
 
-        $reservation = $this->reservation->GetReservation( $id );
+        $reservation = $this->reservations->GetReservation( $id );
 
         if ( $reservation == null )
             $this->not_found();
 
-        if ( $this->reservation->delete( $id ) )
+        if ( $this->reservations->delete( $id ) )
         {
             Router::redirectLocal( 'reservation', 'index' );
         }
         else $this->view["error"] = "Une erreur ses produite lors de la suppresion de l'utilisateur.";
 
         $this->render( 'delete', $reservation );
+    }
+
+    /*
+     *
+     * GET : /manage/invoice/{id}
+     * Visualisation de facture
+     * 
+     * @param int $id ID de réservation
+     */
+    public function invoice( int $id )
+    {
+        if ( !$this->user || !$this->user->admin )
+            $this->unauthorized();
+
+        $reservation = $this->reservations->GetReservation( $id );
+
+        if ( $reservation == null )
+            $this->not_found();
+        
+        $this->invoice->Create( $reservation, 'I' );
     }
 }
 

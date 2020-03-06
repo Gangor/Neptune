@@ -10,11 +10,6 @@
         <div class="col-md-6">
             <form id="reserve" name="reserve" action="/room/reserveConfirm/<?php echo $room->numero ?>" method="post">
                 <div class="text-danger"><?php echo $error; ?></div>
-
-                <?php if ( isset( $success ) ) { ?>
-                    <p class="text-center text-success">La chambre a été mise à jour avec succès.</p>
-                <?php } ?>
-                
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">

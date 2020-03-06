@@ -15,7 +15,7 @@
 <div class="container">
     <div class="mt-3"></div>
 
-    <table class="table table-striped">
+    <table class="table table-striped text-center">
         <thead>
             <tr>
                 <th>Civilité</th>
@@ -30,21 +30,18 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach( $reservations as $reservation) {                
-                    $debut = DateTime::createFromFormat('Y-m-d H:i:s', (string)$reservation->debut);
-                    $fin = DateTime::createFromFormat('Y-m-d H:i:s', (string)$reservation->fin);
-                    $days = $fin->diff($debut)->format("%a") + 1;
-            ?>
+            <?php foreach( $reservations as $reservation) { ?>
                 <tr>
                     <th><?php echo $reservation->civilite ?></th>
                     <th><?php echo $reservation->prenom ?></th>
                     <th><?php echo $reservation->nom ?></th>
                     <th><?php echo $reservation->numero ?></th>
-                    <th><?php echo $debut->format( 'd-m-y' ) ?></th>
-                    <th><?php echo $fin->format( 'd-m-y' ) ?></th>
-                    <th><?php echo $reservation->prix * $days ?>€</th>
+                    <th><?php echo date( 'd/m/Y', strtotime( $reservation->debut ) ) ?></th>
+                    <th><?php echo date( 'd/m/Y', strtotime( $reservation->fin ) ) ?></th>
+                    <th><?php echo $reservation->prix ?>€</th>
                     <th><?php echo $reservation->paye == '-1' ? 'Payé' : 'En attente' ?></th>
                     <th>
+                        <a class="btn btn-secondary" href="/reservation/invoice/<?php echo $reservation->tid ?>" target="_blank"><i class="fa fa-file-pdf"></i></a>
                         <a class="btn btn-danger" href="/reservation/delete/<?php echo $reservation->tid ?>"><i class="fa fa-trash"></i></a>
                     </th>
                 </tr>

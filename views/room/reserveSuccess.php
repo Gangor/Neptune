@@ -1,8 +1,5 @@
 <?php
     $title = 'Synthèse de votre réservation';
-    $debut = DateTime::createFromFormat('Y-m-d H:i:s', (string)$models->debut);
-    $fin = DateTime::createFromFormat('Y-m-d H:i:s', (string)$models->fin);
-    $days = $fin->diff($debut)->format("%a") + 1;
 ?>
 
 <div class="mt-5"></div>
@@ -11,18 +8,31 @@
     <div class="mt-5"></div>
     <div class="row justify-content-md-center">
         <div class="col-md-6">
+
+            <!-- progressbar -->
+            <ul id="progressbar">
+                <li class="active" id="room"><p class="text-center">Réservation</p></li>
+                <li id="payment"><p class="text-center">Paiement</p></li>
+                <li id="confirm"><p class="text-center">Fin</p></li>
+            </ul> <!-- fieldsets -->
+
             <p>Félicitation votre réservation a été valider avec succès.</p>
 
             <div class="mt-3"></div>
             <dl class="dl-horizontal">
                 <dt>Chambre n° <?php echo $models->numero ?></dt>
                 <dt>Etage <?php echo $models->etage ?></dt>
-                <dt>Date de début : <?php echo $debut->format( 'd-m-y' ) ?></dt>
-                <dt>Date de Fin : <?php echo $fin->format( 'd-m-y' ) ?></dt>
-                <dt>Prix : <?php echo $days * $models->prix ?>€</dt>
+                <dt>Date de début : <?php echo date( 'd/m/Y', strtotime( $models->debut ) ) ?></dt>
+                <dt>Date de Fin : <?php echo date( 'd/m/Y', strtotime( $models->fin ) ) ?></dt>
+                <dt>Prix : <?php echo $models->prix ?>€</dt>
             </dl>
 
-            <p>Vous pouvez à toute moment annuler votre réservation dans votre espace membre.</p>
+            <p class="text-center">
+                <th><a class="btn btn-success" href="/billing/buy/<?php echo $models->tid ?>">Payer</a></th>
+                <th><a class="btn btn-danger" href="/manage/deleteReservation/<?php echo $models->tid ?>">Annuler ma réservation</a></th>
+            </p>
+
+            <p>Vous pouvez à toute moment annuler ou payer plus tard en consultant la page réservations de votre espace membre.</p>
         </div>
     </div>
 </div>

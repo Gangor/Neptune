@@ -13,6 +13,7 @@
             <hr>
             
             <h5 class="text-center">Modifier le mot de passe</h5>
+            <div class="mb-3"></div>
             <div class="text-center">
                 <a class="btn btn-success" href="/manage/editpassword">Modifier</a>
             </div>
@@ -68,6 +69,7 @@
             <hr>
             
             <h5 class="text-center">Gestion du compte</h5>
+            <div class="mb-3"></div>
             <div class="text-center">
                 <a class="btn btn-warning" href="/manage/recoveData" target="_blank">Données du compte</a>
                 <a class="btn btn-danger" href="/manage/delete">Supprimer mon compte</a>

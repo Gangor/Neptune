@@ -1,6 +1,7 @@
 <?php
 
 require CORE. "/controller.php";
+require CORE. "/invoice.php";
 require CORE. "/reservations.php";
 
 require MODELS. "/manage/editModel.php";
@@ -10,11 +11,13 @@ require MODELS. "/reservation/searchModel.php";
 class manageController extends Controller
 {
     private $users;
+    private $invoice;
     private $reservation;
 
     public function __construct()
     {
         $this->users = new Users();
+        $this->invoice = new Invoice();
         $this->reservation = new Reservations();
     }
 
@@ -166,8 +169,32 @@ class manageController extends Controller
 
     /*
      *
+     * GET : /manage/invoice/{id}
+     * Visualisation de facture
+     * 
+     * @param int $id ID de réservation
+     */
+    public function invoice( int $id )
+    {
+        if ( !$this->user )
+            $this->unauthorized();
+
+        $reservation = $this->reservation->GetReservation( $id );
+
+        if ( $reservation == null )
+            $this->not_found();
+
+        if ( $reservation->client_id != $this->user->id )
+            $this->not_found();
+        
+        $this->invoice->Create( $reservation, 'I' );
+    }
+
+    /*
+     *
      * GET : /manage/editpassword
      * Page de récupération des données utilisateur
+     * 
      */
     public function recoveData()
     {

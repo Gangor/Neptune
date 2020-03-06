@@ -101,7 +101,7 @@ class Users
         if ( $this->conn )
         {
             $search = "%$search%";
-            $statement = $this->conn->prepare( 'SELECT * FROM clients WHERE prenom LIKE :search or nom LIKE :search or identifiant LIKE :search' );
+            $statement = $this->conn->prepare( 'SELECT * FROM clients WHERE prenom LIKE :search or nom LIKE :search or identifiant LIKE :search ORDER by id desc' );
             $statement->bindParam( ':search', $search );
 
             if ( $statement->execute() )
@@ -128,6 +128,31 @@ class Users
         {
             $statement = $this->conn->prepare( 'SELECT * FROM clients where id = :id_client' );
             $statement->bindParam(':id_client', $id);
+
+            if ( $statement->execute() )
+            {
+                $user = $statement->fetch( PDO::FETCH_OBJ );
+                $statement->closeCursor();
+
+                return $user;
+            }
+        }
+    }
+
+    /**
+     * 
+     * Récupère une utilisateur à partir sa clé en base de donnée
+     * 
+     * @param   int $cle    Clé de l'utilisateur
+     * @return  object
+     * 
+     */
+    function GetUserByKey( string $cle )
+    {
+        if ( $this->conn )
+        {
+            $statement = $this->conn->prepare( 'SELECT * FROM clients where cle = :cle' );
+            $statement->bindParam(':cle', $cle );
 
             if ( $statement->execute() )
             {

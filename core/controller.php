@@ -53,16 +53,14 @@ class Controller
      */
     public function render( string $viewname, $models = null, string $layout = "default")
     {
-        extract( $this->view );
-
-        ob_start();
-
         $controller = strtolower( str_replace( 'Controller', '', get_class( $this ) ) );
         $file = VIEWS. '/'. $controller .'/'. $viewname .'.php';
 
         if ( !is_file( $file ) )
             throw new Exception( 'View not found !!!' );
 
+        extract( $this->view );
+        ob_start();
         require( $file );
 
         $this->section["body"] = ob_get_clean();

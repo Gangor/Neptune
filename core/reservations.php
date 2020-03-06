@@ -28,12 +28,13 @@ class Reservations
     {
         if ( $this->conn )
         {
-            $statement = $this->conn->prepare( "INSERT INTO planning (chambre_id, debut, fin, reservation, paye, client_id) VALUES (:chambre_id, :debut, :fin, :reservation, :paye, :client_id)" );            
+            $statement = $this->conn->prepare( "INSERT INTO planning (chambre_id, debut, fin, reservation, paye, prix, client_id) VALUES (:chambre_id, :debut, :fin, :reservation, :paye, :prix, :client_id)" );
             $statement->bindParam(':chambre_id', $reservation->chambre_id );
             $statement->bindParam(':debut', $reservation->debut );
             $statement->bindParam(':fin', $reservation->fin );
             $statement->bindParam(':reservation', $reservation->reservation );
             $statement->bindParam(':paye', $reservation->paye );
+            $statement->bindParam(':prix', $reservation->prix );
             $statement->bindParam(':client_id', $reservation->client_id );
             $statement->execute();
 
@@ -91,7 +92,7 @@ class Reservations
     {
         if ( $this->conn )
         {
-            $statement = $this->conn->prepare( 'SELECT * FROM planning where chambre_id = :chambre_id and reservation = -1 and (debut between :debut and :fin) OR (fin between :debut and :fin)' );
+            $statement = $this->conn->prepare( 'SELECT * FROM planning where chambre_id = :chambre_id and reservation = -1 and ((debut between :debut and :fin) OR (fin between :debut and :fin))' );
             $statement->bindParam(':chambre_id', $id );
             $statement->bindParam(':debut', $debut );
             $statement->bindParam(':fin', $fin );
@@ -119,10 +120,10 @@ class Reservations
         if ( $this->conn )
         {            
             if ( $date == '' )
-                $statement = $this->conn->prepare( 'SELECT * FROM planning p INNER JOIN clients c on p.client_id = c.id INNER JOIN chambres h on h.numero = p.chambre_id INNER JOIN tarifs t on h.tarif_id = t.id where reservation = -1 ORDER by debut DESC' );
+                $statement = $this->conn->prepare( 'SELECT * FROM planning p LEFT JOIN clients c on p.client_id = c.id INNER JOIN chambres h on h.numero = p.chambre_id where reservation = -1 ORDER by debut DESC' );
             else
             {
-                $statement = $this->conn->prepare( 'SELECT * FROM planning p INNER JOIN clients c on p.client_id = c.id INNER JOIN chambres h on h.numero = p.chambre_id INNER JOIN tarifs t on h.tarif_id = t.id where reservation = -1 AND :date between debut and fin ORDER by debut DESC' );
+                $statement = $this->conn->prepare( 'SELECT * FROM planning p LEFT JOIN clients c on p.client_id = c.id INNER JOIN chambres h on h.numero = p.chambre_id where reservation = -1 AND :date between debut and fin ORDER by debut DESC' );
                 $statement->bindParam(':date', $date );
             }
 
@@ -148,7 +149,7 @@ class Reservations
     {
         if ( $this->conn )
         {
-            $statement = $this->conn->prepare( 'SELECT * FROM planning p INNER JOIN clients c on p.client_id = c.id INNER JOIN chambres h on h.numero = p.chambre_id INNER JOIN tarifs t on h.tarif_id = t.id where tid = :id' );
+            $statement = $this->conn->prepare( 'SELECT * FROM planning p LEFT JOIN clients c on p.client_id = c.id INNER JOIN chambres h on h.numero = p.chambre_id where tid = :id' );
             $statement->bindParam(':id', $id );
 
             if ( $statement->execute() )
@@ -174,10 +175,10 @@ class Reservations
         if ( $this->conn )
         {
             if ( $date == '' )
-                $statement = $this->conn->prepare( 'SELECT * FROM planning p INNER JOIN clients c on p.client_id = c.id INNER JOIN chambres h on h.numero = p.chambre_id INNER JOIN tarifs t on h.tarif_id = t.id where reservation = -1 and client_id = :client_id ORDER by debut DESC' );
+                $statement = $this->conn->prepare( 'SELECT * FROM planning p LEFT JOIN clients c on p.client_id = c.id INNER JOIN chambres h on h.numero = p.chambre_id where reservation = -1 and client_id = :client_id ORDER by debut DESC' );
             else
             {
-                $statement = $this->conn->prepare( 'SELECT * FROM planning p INNER JOIN clients c on p.client_id = c.id INNER JOIN chambres h on h.numero = p.chambre_id INNER JOIN tarifs t on h.tarif_id = t.id where reservation = -1 and client_id = :client_id AND :date between debut and fin ORDER by debut DESC' );
+                $statement = $this->conn->prepare( 'SELECT * FROM planning p LEFT JOIN clients c on p.client_id = c.id INNER JOIN chambres h on h.numero = p.chambre_id where reservation = -1 and client_id = :client_id AND :date between debut and fin ORDER by debut DESC' );
                 $statement->bindParam(':date', $date );
             }
 
@@ -190,6 +191,32 @@ class Reservations
 
                 return $user;
             }
+        }
+    }
+
+    /**
+     * 
+     * Mes à jour une réservation en base de donnée
+     * 
+     * @param   object $reservation    Réservation à mettre à jour
+     * @return  bool
+     * 
+     */
+    function Update( object $reservation )
+    {
+        if ( $this->conn )
+        {
+            $statement = $this->conn->prepare( "UPDATE planning SET chambre_id = :chambre_id, debut = :debut, fin = :fin, reservation = :reservation, paye = :paye, prix = :prix, client_id = :client_id WHERE tid = :tid" );
+            $statement->bindParam(':chambre_id', $reservation->chambre_id );
+            $statement->bindParam(':debut', $reservation->debut );
+            $statement->bindParam(':fin', $reservation->fin );
+            $statement->bindParam(':reservation', $reservation->reservation );
+            $statement->bindParam(':paye', $reservation->paye );
+            $statement->bindParam(':prix', $reservation->prix );
+            $statement->bindParam(':client_id', $reservation->client_id );
+            $statement->bindParam(':tid', $reservation->tid );
+            
+            return $statement->execute();
         }
     }
 }

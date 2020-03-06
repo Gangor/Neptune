@@ -3,6 +3,7 @@
 require CORE. "/controller.php";
 require CORE. "/rooms.php";
 require CORE. "/reservations.php";
+require CORE. "/tarifs.php";
 
 require MODELS. "/room/createModel.php";
 require MODELS. "/room/editModel.php";
@@ -14,12 +15,14 @@ require MODELS. "/room/uploadModel.php";
 class roomController extends Controller
 {
     public $rooms;
-    public $reservation;
+    public $reservations;
+    public $tarifs;
 
     function __construct()
     {
         $this->rooms = new Rooms();
-        $this->reservation = new Reservations();
+        $this->reservations = new Reservations();
+        $this->tarifs = new Tarifs();
     }
 
     /**
@@ -48,7 +51,7 @@ class roomController extends Controller
             $this->unauthorized();
         
         $model = new createModel( true );
-        $this->view[ 'tarifs' ] = $this->rooms->GetTarifs();
+        $this->view[ 'tarifs' ] = $this->tarifs->GetTarifs();
 
         $this->render( 'create', $model );
     }
@@ -68,7 +71,7 @@ class roomController extends Controller
 
         if ( $model->IsValid )
         {
-            $tarif = $this->rooms->GetTarif( $model->Tarif );
+            $tarif = $this->tarifs->GetTarif( $model->Tarif );
 
             if ( $tarif )
             {
@@ -90,7 +93,7 @@ class roomController extends Controller
         }
         else $this->view["error"] = "Un ou plusieurs champs ne sont pas correctement remplis.";
 
-        $this->view[ 'tarifs' ] = $this->rooms->GetTarifs();
+        $this->view[ 'tarifs' ] = $this->tarifs->GetTarifs();
         $this->render( 'create', $model );
     }
 
@@ -117,7 +120,7 @@ class roomController extends Controller
 
         $this->view[ 'room' ]   = $room;
         $this->view[ 'photos' ] = $this->rooms->GetPhotos( $id );
-        $this->view[ 'tarifs' ] = $this->rooms->GetTarifs();
+        $this->view[ 'tarifs' ] = $this->tarifs->GetTarifs();
         $this->view[ 'upload' ] = new UploadModel( true );
         
         $this->render( 'edit', $model );
@@ -145,13 +148,13 @@ class roomController extends Controller
 
         if ( $model->IsValid )
         {
-            $tarif = $this->rooms->GetTarif( $model->Tarif );
+            $tarif = $this->tarifs->GetTarif( $model->Tarif );
 
             if ( $tarif )
             {
                 $room->capacite     = (int)$model->Capacite;
                 $room->exposition   = $model->Exposition;
-                $room->douche       = (bool)$model->Douche;
+                $room->douche       = (int)$model->Douche;
                 $room->etage        = (int)$model->Etage;
                 $room->tarif_id     = (int)$model->Tarif;
 
@@ -167,7 +170,7 @@ class roomController extends Controller
 
         $this->view[ 'room' ]   = $room;
         $this->view[ 'photos' ] = $this->rooms->GetPhotos( $id );
-        $this->view[ 'tarifs' ] = $this->rooms->GetTarifs();
+        $this->view[ 'tarifs' ] = $this->tarifs->GetTarifs();
         $this->view[ 'upload' ] = new UploadModel( true );
 
         $this->render( 'edit', $model );
@@ -299,7 +302,7 @@ class roomController extends Controller
 
             if ( $debut < $fin )
             {
-                if ( !$this->reservation->GetPlannings( $id, $model->Debut, $model->Fin ) )
+                if ( !$this->reservations->GetPlannings( $id, $model->Debut, $model->Fin ) )
                 {
                     $model = new ReserveConfirmModel( true );
                     
@@ -346,7 +349,7 @@ class roomController extends Controller
 
             if ( $debut < $fin )
             {
-                if ( !$this->reservation->GetPlannings( $id, $model->Debut, $model->Fin ) )
+                if ( !$this->reservations->GetPlannings( $id, $model->Debut, $model->Fin ) )
                 {
                     $reservation = new stdClass();
     
@@ -355,9 +358,10 @@ class roomController extends Controller
                     $reservation->fin = $fin->format('Y-m-d');
                     $reservation->reservation = -1;
                     $reservation->paye = 0;
+                    $reservation->prix = $room->prix * $days;
                     $reservation->client_id = $this->user->id;
                     
-                    $result = $this->reservation->Create( $reservation );
+                    $result = $this->reservations->Create( $reservation );
                     
                     if ( $result )
                     {                        
@@ -379,12 +383,12 @@ class roomController extends Controller
         if ( !$this->user )
             $this->unauthorized();
 
-        $reservation = $this->reservation->GetReservation( $id );
-
-        if ( $this->user->id != $reservation->client_id )
-            $this->not_found();
+        $reservation = $this->reservations->GetReservation( $id );
 
         if ( $reservation == null )
+            $this->not_found();
+
+        if ( $this->user->id != $reservation->client_id )
             $this->not_found();
         
         $this->render( 'reserveSuccess', $reservation );
@@ -436,7 +440,7 @@ class roomController extends Controller
 
         $this->view[ 'room' ]   = $room;
         $this->view[ 'photos' ] = $this->rooms->GetPhotos( $id );
-        $this->view[ 'tarifs' ] = $this->rooms->GetTarifs();
+        $this->view[ 'tarifs' ] = $this->tarifs->GetTarifs();
         $this->view[ 'upload' ] = $upload;
         
         $this->render( 'edit', $model );

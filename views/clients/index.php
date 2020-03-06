@@ -6,6 +6,10 @@
 <h2 class="text-center"><?php echo $title ?></h2>
 <div class="mt-5"></div>
 
+<div class="container">
+    <a href="/clients/create" class="btn btn-primary float-right">Ajouter</a>
+</div>
+
 <?php $this->renderPartial( VIEWS. '/shared/_search.php', $models ) ?>
 <div class="mt-3"></div>
 

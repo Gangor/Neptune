@@ -5,8 +5,8 @@ Homemade MVC Framework PHP
 
 ## Todo
 - [x] Engine Core 
-- [ ] Plugin
-- [ ] Finalization
+- [x] Plugin
+- [x] Finalization
 
 ## Author 
 Joël de saint Gilles

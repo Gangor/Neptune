@@ -1,6 +1,7 @@
 <?php
 
 require CORE. "/controller.php";
+require CORE. "/email.php";
 
 require MODELS. "/clients/createModel.php";
 require MODELS. "/clients/editModel.php";
@@ -12,6 +13,7 @@ class clientsController extends Controller
 
     public function __construct()
     {
+        $this->email = new Email();
         $this->users = new Users();
     }
 

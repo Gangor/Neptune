@@ -83,11 +83,9 @@ class clientsController extends Controller
                 $newUser->confirme      = (int)$model->Confirme;
                 $newUser->admin         = (int)$model->Admin;
                 
-                echo 'truc';
                 if ( $this->users->Create( $newUser ) )
                 {
-                    echo 'truc2';
-                    if ( !$model->Confirme )
+                    if ( !$model->confirme )
                         $this->email->Send( $newUser, 'Inscription', 'register' );
 
                     Router::redirectLocal( 'clients', 'index' );

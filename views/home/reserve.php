@@ -8,7 +8,7 @@
     <div class="mt-5"></div>
     <div class="row justify-content-md-center">
         <div class="col-md-6">
-            <form id="reserve" name="reserve" action="/home/reserveSearch/<?php echo $room->numero ?>" method="post">
+            <form id="reserve" name="reserve" action="/home/reserveSearch" method="post">
                 <div class="text-danger"><?php echo $error; ?></div>
                 <div class="row">
                     <div class="col-md-6">
